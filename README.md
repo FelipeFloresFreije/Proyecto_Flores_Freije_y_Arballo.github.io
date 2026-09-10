@@ -10,4 +10,4 @@
 
 ## Documentación
 
-- [Bitácora de IA](bitacora/bitacora-ia.md)
+- [Bitácora de IA](https://github.com/FelipeFloresFreije/Proyecto_Flores_Freije_y_Arballo.github.io/blob/gh_pages/bitacora-ia.md)
