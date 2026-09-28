@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crear Cuenta</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Fuente Nunito -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="auth-body">
+
+    <main>
+
+        <!-- Tarjeta de registro -->
+        <section class="auth-card">
+
+            <!-- Logo -->
+            <img src="assets/img/Logo-Batman.svg" alt="Logo" class="auth-logo">
+
+            <!-- Título -->
+            <h2>Crear Cuenta</h2>
+
+            <!-- Formulario -->
+            <form>
+
+                <!-- Nombre y apellido -->
+                <div>
+
+                    <div>
+                        <label for="nombre">Nombre*:</label>
+
+                        <input
+                            type="text"
+                            id="nombre"
+                            name="nombre"
+                            required
+                        >
+                    </div>
+
+                    <div>
+                        <label for="apellido">Apellido*:</label>
+
+                        <input
+                            type="text"
+                            id="apellido"
+                            name="apellido"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <!-- Apodo -->
+                <div>
+
+                    <label for="apodo">Apodo:</label>
+
+                    <input
+                        type="text"
+                        id="apodo"
+                        name="apodo"
+                    >
+
+                </div>
+
+                <!-- Email -->
+                <div>
+
+                    <label for="email">Email*:</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="tu@email.com"
+                        required
+                    >
+
+                </div>
+
+                <!-- Contraseña -->
+                <div>
+
+                    <label for="password">Contraseña*:</label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                    >
+
+                </div>
+
+                <!-- Repetir contraseña -->
+                <div>
+
+                    <label for="password-repeat">
+                        Repetir Contraseña*:
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password-repeat"
+                        name="password-repeat"
+                        required
+                    >
+
+                </div>
+
+                <!-- Términos y condiciones -->
+                <div>
+
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        name="terms"
+                        required
+                    >
+
+                    <label for="terms">
+                        ¿Acepto Terminos y Condiciones?
+                    </label>
+
+                </div>
+
+                <!-- Crear cuenta -->
+                <button type="submit">
+                    Crear Cuenta
+                </button>
+
+            </form>
+
+            <!-- Separador -->
+            <div>
+
+                <span></span>
+
+                <p>O continúa con</p>
+
+                <span></span>
+
+            </div>
+
+            <!-- Redes sociales -->
+            <div>
+
+                <button type="button" aria-label="Twitter">
+                    <!-- Icono Twitter -->
+                </button>
+
+                <button type="button" aria-label="TikTok">
+                    <!-- Icono TikTok -->
+                </button>
+
+                <button type="button" aria-label="Facebook">
+                    <!-- Icono Facebook -->
+                </button>
+
+                <button type="button" aria-label="Instagram">
+                    <!-- Icono Instagram -->
+                </button>
+
+                <button type="button" aria-label="Google">
+                    <!-- Icono Google -->
+                </button>
+
+            </div>
+
+            <!-- Iniciar sesión -->
+            <div>
+
+                <p>¿Ya tienes cuenta?</p>
+
+                <a href="login.html">
+                    Iniciar Sesión
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>

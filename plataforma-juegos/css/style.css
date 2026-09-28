@@ -1,0 +1,837 @@
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+
+    /* ----- PRIMARIOS ----- */
+    --primary-light: #B5D4F4;
+    --primary-default: #378ADD;
+    --primary-dark: #185FA5;
+    --primary-darker: #0C447C;
+
+    /* ----- SECUNDARIOS ----- */
+    --secondary-light: #67E8F9;
+    --secondary-default: #06B6D4;
+    --secondary-dark: #0891B2;
+    --secondary-darker: #155E75;
+
+    /* ----- ACENTOS ----- */
+    --accent-light: #E1C7F6;
+    --accent-default: #9D6FD9;
+    --accent-dark: #6B3FA0;
+    --accent-darker: #3D1F5C;
+
+    /* ----- NEUTRALES ----- */
+    --neutral-white: #FFFFFF;
+    --neutral-light: #F9F8F6;
+    --neutral-medium: #D3D1C7;
+    --neutral-dark: #888780;
+    --neutral-darker: #3A3A3A;
+    --neutral-black: #2C2C2A;
+
+    /* ----- SUCCESS ----- */
+    --success-light: #D5F4E6;
+    --success-default: #27AE60;
+    --success-dark: #1E8449;
+
+    /* ----- WARNING ----- */
+    --warning-light: #FCF3E6;
+    --warning-default: #F39C12;
+    --warning-dark: #BA7D0B;
+
+    /* ----- ERROR ----- */
+    --error-light: #FF8080;
+    --error-default: #DC143C;
+    --error-dark: #B22222;
+    --error-darker: #8B0000;
+
+    /* ----- INTERACCIÓN ----- */
+    --interaction-hover: #185FA5;
+    --interaction-disabled: #D3D1C7;
+    --interaction-pressed: #0C447C;
+    --interaction-focus: #378ADD;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(
+        135deg,
+        var(--primary-default) 0%,
+        var(--primary-dark) 100%
+    );
+
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+/*
+----------------------------------------------
+TIPOGRAFÍA
+----------------------------------------------
+    */
+h1 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 50px;
+    letter-spacing: 0;
+}
+
+h2 {
+    font-family: 'Nunito', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 40px;
+    letter-spacing: 0;
+}
+
+.body {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0;
+}
+
+.small {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 24px;
+    letter-spacing: 0;
+}
+
+.button-giant {
+    font-family: 'Nunito', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0;
+}
+
+.button-large {
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0;
+}
+
+.button-medium {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0;
+}
+
+.button-small {
+    font-family: 'Nunito', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0;
+}
+
+.button-tiny {
+    font-family: 'Nunito', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0;
+}
+
+.carousel-title{
+    font-family: 'Nunito', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 45px;
+    letter-spacing: 0;
+}
+
+.card-title{
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+    letter-spacing: 0;
+}
+
+.card-text{
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: 0;
+}
+
+/*
+----------------------------------------------
+   BOTONES
+----------------------------------------------
+*/
+
+/*BASE*/
+
+.btn {
+    display: inline-flex;
+
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+
+    user-select: none;
+}
+
+
+/*TAMAÑOS*/
+
+.btn-tiny {
+    width: 80px;
+    height: 32px;
+
+    font-size: 11px;
+    line-height: 16px;
+}
+
+.btn-small {
+    width: 120px;
+    height: 36px;
+
+    font-size: 12px;
+    line-height: 16px;
+}
+
+.btn-medium {
+    width: 150px;
+    height: 45px;
+
+    font-size: 14px;
+    line-height: 16px;
+}
+
+.btn-large {
+    width: 200px;
+    height: 50px;
+
+    font-size: 16px;
+    line-height: 16px;
+}
+
+.btn-giant {
+    width: 280px;
+    height: 60px;
+
+    font-size: 18px;
+    line-height: 16px;
+}
+
+
+/*CUADRADOS*/
+
+.btn-square {
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.btn-tiny.btn-square {
+    width: 32px;
+    height: 32px;
+}
+
+.btn-small.btn-square {
+    width: 36px;
+    height: 36px;
+}
+
+.btn-medium.btn-square {
+    width: 45px;
+    height: 45px;
+}
+
+.btn-large.btn-square {
+    width: 50px;
+    height: 50px;
+}
+
+
+/*PRIMARY*/
+
+.btn-primary {
+    background-color: var(--primary-default);
+    color: var(--neutral-white);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    background-color: var(--primary-darker);
+    transform: translateY(0);
+}
+
+
+/*SECONDARY*/
+
+.btn-secondary {
+    background-color: var(--accent-default);
+    color: var(--neutral-white);
+}
+
+.btn-secondary:hover {
+    background-color: var(--accent-dark);
+    transform: translateY(-2px);
+}
+
+.btn-secondary:active {
+    background-color: var(--accent-darker);
+    transform: translateY(0);
+}
+
+
+/*DANGER*/
+
+.btn-danger {
+    background-color: var(--error-default);
+    color: var(--neutral-white);
+}
+
+.btn-danger:hover {
+    background-color: var(--error-dark);
+    transform: translateY(-2px);
+}
+
+.btn-danger:active {
+    background-color: var(--error-darker);
+    transform: translateY(0);
+}
+
+
+/*OUTLINE*/
+
+.btn-outline {
+    background-color: transparent;
+}
+
+.btn-outline.btn-primary {
+    color: var(--primary-default);
+    border: 2px solid var(--primary-default);
+}
+
+.btn-outline.btn-primary:hover {
+    background-color: var(--primary-default);
+    color: var(--neutral-white);
+}
+
+.btn-outline.btn-secondary {
+    color: var(--accent-default);
+    border: 2px solid var(--accent-default);
+}
+
+.btn-outline.btn-secondary:hover {
+    background-color: var(--accent-default);
+    color: var(--neutral-white);
+}
+
+.btn-outline.btn-danger {
+    color: var(--error-default);
+    border: 2px solid var(--error-default);
+}
+
+.btn-outline.btn-danger:hover {
+    background-color: var(--error-default);
+    color: var(--neutral-white);
+}
+
+
+/*DISABLED*/
+
+.btn:disabled,
+.btn.disabled {
+    background-color: var(--interaction-disabled);
+    color: var(--neutral-white);
+
+    cursor: not-allowed;
+
+    transform: none;
+    box-shadow: none;
+}
+
+.btn:disabled:hover,
+.btn.disabled:hover {
+    background-color: var(--interaction-disabled);
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/*FOCUS*/
+
+.btn:focus-visible {
+    outline: 3px solid var(--interaction-focus);
+    outline-offset: 3px;
+}
+
+/*
+----------------------------------------------
+   LOGIN / REGISTRO
+----------------------------------------------
+*/
+
+
+/*FONDO DE LOGIN Y REGISTRO*/
+
+.auth-body {
+    min-height: 100vh;
+
+    background: var(--primary-dark);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+}
+
+
+/*CONTENEDOR*/
+
+.auth-body main {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/*TARJETA*/
+
+.auth-card {
+    width: 490px;
+
+    background-color: var(--neutral-light);
+
+    border: 1px solid var(--neutral-medium);
+    border-radius: 8px;
+
+    padding: 14px 24px 16px;
+
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+
+/*
+   LOGO
+*/
+
+.auth-logo {
+    display: block;
+
+    width: 56px;
+    height: 56px;
+
+    object-fit: contain;
+
+    margin: 0 auto 25px;
+}
+
+/*SVG*/
+
+.icons{
+    width: 24px;
+    height: 24px;
+
+    display: block;
+}
+
+
+/*HOVER*/
+
+.icons:hover {
+    transform: scale(1.12);
+}
+
+
+/*
+   FORMULARIO
+*/
+
+.auth-card form {
+    width: 100%;
+}
+
+
+/*GRUPOS DE CAMPOS*/
+
+.auth-card .form-group {
+    width: 100%;
+
+    margin-bottom: 25px;
+}
+
+
+/*LABEL*/
+
+.auth-card .form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--neutral-darker);
+
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+
+/*INPUT*/
+
+.auth-card .form-group input {
+    width: 100%;
+    height: 47px;
+
+    padding: 0 12px;
+
+    background-color: var(--neutral-white);
+
+    border: 1px solid var(--neutral-medium);
+    border-radius: 0;
+
+    outline: none;
+
+    color: var(--neutral-black);
+
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/*PLACEHOLDER*/
+
+.auth-card .form-group input::placeholder {
+    color: var(--neutral-medium);
+}
+
+
+/*INPUT ENFOCADO*/
+
+.auth-card .form-group input:focus {
+    border-color: var(--primary-default);
+
+    box-shadow:
+        0 0 0 2px rgba(55, 138, 221, 0.15);
+}
+
+
+/* 
+----------------------------------------------
+   LOGIN
+----------------------------------------------
+*/
+
+
+/*RECORDAR / RECUPERAR CONTRASEÑA*/
+
+.login-options {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+
+.login-options input {
+    width: 18px;
+    height: 18px;
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+
+.login-options label {
+    color: var(--primary-default);
+
+    font-size: 16px;
+    line-height: 24px;
+
+    cursor: pointer;
+}
+
+
+/*
+----------------------------------------------
+   REGISTRO
+---------------------------------------------- 
+*/
+
+
+/*NOMBRE + APELLIDO*/
+
+.register-name {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+
+/*TÉRMINOS*/
+
+.register-terms {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+
+.register-terms input {
+    width: 18px;
+    height: 18px;
+
+    margin: 0;
+
+    cursor: pointer;
+}
+
+
+.register-terms label {
+    color: var(--primary-default);
+
+    font-size: 16px;
+    line-height: 24px;
+
+    cursor: pointer;
+}
+
+
+/*
+----------------------------------------------
+   BOTÓN DE FORMULARIO
+----------------------------------------------
+*/
+
+.auth-card form > .btn {
+    display: flex;
+
+    margin: 0 auto;
+}
+
+
+/* 
+----------------------------------------------
+   SEPARADOR "O CONTINÚA CON"
+----------------------------------------------
+*/
+
+.social-divider {
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin: 30px 0;
+}
+
+
+.social-divider::before,
+.social-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background-color: var(--neutral-darker);
+}
+
+
+.social-divider span {
+    display: none;
+}
+
+
+.social-divider p {
+    margin: 0 5px;
+
+    color: var(--neutral-darker);
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+
+    white-space: nowrap;
+}
+
+
+/* 
+----------------------------------------------
+   REDES SOCIALES
+----------------------------------------------
+*/
+
+.social-buttons {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 28px;
+}
+
+
+/*BOTONES DE REDES*/
+
+.social-buttons button {
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease;
+}
+
+/*
+----------------------------------------------
+   PARTE INFERIOR
+----------------------------------------------
+*/
+
+.account-link {
+    text-align: center;
+}
+
+
+.account-link p {
+    margin: 0 0 10px;
+
+    color: var(--neutral-darker);
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+
+.account-link a {
+    color: var(--primary-default);
+
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease;
+}
+
+
+.account-link a:hover {
+    color: var(--primary-dark);
+
+    text-decoration: underline;
+}
+
+
+/* 
+----------------------------------------------
+   REGISTRO: TAMAÑO DE LA TARJETA
+----------------------------------------------
+*/
+
+.register-card {
+    padding-top: 14px;
+    padding-bottom: 16px;
+}
+
+
+/* 
+----------------------------------------------
+   RESPONSIVE
+----------------------------------------------
+*/
+
+@media (max-width: 550px) {
+
+    .auth-body {
+        padding: 15px;
+    }
+
+    .auth-card {
+        width: 100%;
+
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .register-name {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+}
