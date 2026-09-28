@@ -24,22 +24,17 @@
 
     <main>
 
-        <!-- Tarjeta de registro -->
-        <section class="auth-card">
+        <section class="auth-card register-card">
 
-            <!-- Logo -->
-            <img src="assets/img/Logo-Batman.svg" alt="Logo" class="auth-logo">
+            <img src="assets/img/logo-batman.svg" alt="Logo" class="auth-logo">
 
-            <!-- Título -->
             <h2>Crear Cuenta</h2>
 
-            <!-- Formulario -->
             <form>
 
-                <!-- Nombre y apellido -->
-                <div>
+                <div class="register-name">
 
-                    <div>
+                    <div class="form-group">
                         <label for="nombre">Nombre*:</label>
 
                         <input
@@ -50,7 +45,7 @@
                         >
                     </div>
 
-                    <div>
+                    <div class="form-group">
                         <label for="apellido">Apellido*:</label>
 
                         <input
@@ -63,8 +58,7 @@
 
                 </div>
 
-                <!-- Apodo -->
-                <div>
+                <div class="form-group">
 
                     <label for="apodo">Apodo:</label>
 
@@ -76,8 +70,7 @@
 
                 </div>
 
-                <!-- Email -->
-                <div>
+                <div class="form-group">
 
                     <label for="email">Email*:</label>
 
@@ -91,104 +84,64 @@
 
                 </div>
 
-                <!-- Contraseña -->
-                <div>
+                <div class="form-group">
 
                     <label for="password">Contraseña*:</label>
 
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        required
-                    >
+                    <inputtype="password" id="password" name="password" required>
 
                 </div>
 
-                <!-- Repetir contraseña -->
-                <div>
+                <div class="form-group">
 
-                    <label for="password-repeat">
-                        Repetir Contraseña*:
-                    </label>
+                    <label for="password-repeat">Repetir Contraseña*:</label>
 
-                    <input
-                        type="password"
-                        id="password-repeat"
-                        name="password-repeat"
-                        required
-                    >
+                    <input type="password" id="password-repeat" name="password-repeat" required>
 
                 </div>
 
-                <!-- Términos y condiciones -->
-                <div>
+                <div class="register-terms">
 
-                    <input
-                        type="checkbox"
-                        id="terms"
-                        name="terms"
-                        required
-                    >
+                    <input type="checkbox" id="terms" name="terms" required>
 
-                    <label for="terms">
-                        ¿Acepto Terminos y Condiciones?
-                    </label>
+                    <label for="terms"> ¿Acepto Terminos y Condiciones?</label>
 
                 </div>
 
-                <!-- Crear cuenta -->
-                <button type="submit">
-                    Crear Cuenta
-                </button>
+                <button type="submit" class="btn btn-medium btn-primary">Crear Cuenta</button>
 
             </form>
 
-            <!-- Separador -->
-            <div>
-
-                <span></span>
-
+            <div class="social-divider">
                 <p>O continúa con</p>
-
-                <span></span>
-
             </div>
 
-            <!-- Redes sociales -->
-            <div>
+            <div class="social-buttons">
 
-                <button type="button" aria-label="Twitter">
-                    <!-- Icono Twitter -->
+                <button type="button">
+                    <img src="assets/icons/twitter.svg" alt="Twitter" class="icons">
                 </button>
 
-                <button type="button" aria-label="TikTok">
-                    <!-- Icono TikTok -->
+                <button type="button">
+                    <img src="assets/icons/tiktok.svg" alt="TikTok" class="icons">
                 </button>
 
-                <button type="button" aria-label="Facebook">
-                    <!-- Icono Facebook -->
+                <button type="button">
+                    <img src="assets/icons/facebook.svg" alt="Facebook" class="icons">
                 </button>
 
-                <button type="button" aria-label="Instagram">
-                    <!-- Icono Instagram -->
+                <button type="button">
+                    <img src="assets/icons/instagram.svg" alt="Instagram" class="icons">
                 </button>
 
-                <button type="button" aria-label="Google">
-                    <!-- Icono Google -->
+                <button type="button">
+                    <img src="assets/icons/google.svg" alt="Google" class="icons">
                 </button>
 
             </div>
-
-            <!-- Iniciar sesión -->
-            <div>
-
+            <div class="account-link">
                 <p>¿Ya tienes cuenta?</p>
-
-                <a href="login.html">
-                    Iniciar Sesión
-                </a>
-
+                <a href="login.html">Iniciar Sesión</a>
             </div>
 
         </section>
