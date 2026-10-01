@@ -1,17 +1,24 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const menuBtn = document.getElementById('menuBtn');
+document.addEventListener('DOMContentLoaded', function () {
     const sidebar = document.getElementById('sidebar');
-    
-    if (menuBtn && sidebar) {
-        menuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
+    const overlay = document.getElementById('sidebarOverlay');
+    const openBtn = document.getElementById('menuBtn');
+    const closeBtn = document.getElementById('sidebarClose');
 
-        // Cerrar menú al hacer clic fuera
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-                sidebar.classList.remove('active');
-            }
-        });
+    if (!sidebar || !openBtn) return;
+
+    function setOpen(open) {
+        sidebar.classList.toggle('open', open);
+        overlay.classList.toggle('show', open);
+        sidebar.setAttribute('aria-hidden', String(!open));
+        openBtn.setAttribute('aria-expanded', String(open));
+        (open ? closeBtn : openBtn).focus();
     }
+
+    openBtn.addEventListener('click', () => setOpen(true));
+    closeBtn.addEventListener('click', () => setOpen(false));
+    overlay.addEventListener('click', () => setOpen(false));
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && sidebar.classList.contains('open')) setOpen(false);
+    });
 });

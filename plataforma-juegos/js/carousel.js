@@ -1,55 +1,111 @@
-const games = [
-    { title: "Batman Arkham", rating: "9.5", genre: "Acción", img: "batman-arkham.jpg", plays: "2.5M" },
-    { title: "Candy Crush", rating: "8.8", genre: "Puzzle", img: "candy-crush.jpg", plays: "5M" },
-    { title: "Flappy Bird", rating: "7.5", genre: "Arcade", img: "flappy-bird.jpg", plays: "10M" },
-    { title: "Tetris", rating: "9.0", genre: "Puzzle", img: "tetris.jpg", plays: "3M" },
-    { title: "2048", rating: "8.2", genre: "Estrategia", img: "2048.jpg", plays: "1.5M" },
-    { title: "Pac-Man", rating: "8.9", genre: "Arcade", img: "pacman.jpg", plays: "4M" },
-];
-
-function createGameCard(game) {
-    return `
-        <div class="game-card">
-            <img src="img/juegos/${game.img}" alt="${game.title}">
-            <div class="game-card-info">
-                <div class="game-card-title">${game.title}</div>
-                <div class="game-card-rating">⭐ ${game.rating}</div>
-                <div class="game-card-genre">${game.genre}</div>
-                <button class="game-card-play">Jugar</button>
-            </div>
-        </div>
-    `;
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Llenar carruseles
-    const carousels = document.querySelectorAll('.carousel');
-    
-    carousels.forEach(carousel => {
-        const container = carousel.querySelector('.carousel-container');
-        const prevBtn = carousel.querySelector('.carousel-prev');
-        const nextBtn = carousel.querySelector('.carousel-next');
-        
-        // Agregar juegos
-        games.forEach(game => {
-            container.innerHTML += createGameCard(game);
-        });
-
-        // Navegación
-        let scrollAmount = 0;
-        
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                scrollAmount += 200;
-                container.scrollLeft = scrollAmount;
-            });
-        }
-
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                scrollAmount -= 200;
-                container.scrollLeft = scrollAmount;
-            });
-        }
-    });
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.carousel').forEach(initCarousel);
 });
+
+const MAX_VISIBLE = 8;   
+const CARD_W = 220;      
+
+function initCarousel(carousel) {
+    const grid = carousel.querySelector('.games-grid');
+    const buttons = carousel.querySelectorAll(':scope > .btn-square');
+    const prevBtn = buttons[0];
+    const nextBtn = buttons[1];
+    if (!grid || !prevBtn || !nextBtn) return;
+
+    const cards = Array.from(grid.querySelectorAll('.game-card'));
+    if (cards.length === 0) return;
+
+    const track = document.createElement('div');
+    track.className = 'games-track';
+    cards.forEach(card => track.appendChild(card));
+    grid.appendChild(track);
+
+    let index = 0;          
+    let visible = MAX_VISIBLE;
+    let step = CARD_W + 8;  
+
+    function maxIndex() {
+        return Math.max(0, cards.length - visible);
+    }
+
+    function layout() {
+
+        if (window.matchMedia('(max-width: 768px)').matches) {
+            grid.style.width = '';
+            grid.style.removeProperty('--card-w');
+            track.style.transform = '';
+            index = 0;
+            return;
+        }
+
+        const gap = parseFloat(getComputedStyle(track).columnGap) || 8;
+        const carouselGap = parseFloat(getComputedStyle(carousel).columnGap) || 8;
+        const cs = getComputedStyle(grid);
+        const padX = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+
+        const available = carousel.clientWidth
+            - prevBtn.offsetWidth - nextBtn.offsetWidth
+            - carouselGap * 2 - padX;
+
+        if (available <= 0) return; // todavía oculto (loading)
+
+        const cardW = Math.min(CARD_W, available);
+        visible = (available + gap) / (cardW + gap);
+        if (visible < 1) {
+            visible = 1;
+        } else {
+            visible = parseInt(visible);
+
+            if (visible > MAX_VISIBLE) {
+                visible = MAX_VISIBLE;
+            }
+        }
+        step = cardW + gap;
+
+        grid.style.setProperty('--card-w', cardW + 'px');
+        grid.style.width = (visible * cardW + (visible - 1) * gap + padX) + 'px';
+
+        index = Math.min(index, maxIndex());
+        render();
+    }
+
+    function render() {
+        track.style.transform = 'translateX(' + (-index * step) + 'px)';
+        prevBtn.disabled = index <= 0;
+        nextBtn.disabled = index >= maxIndex();
+    }
+
+    // Animación de entrada escalonada solo para las cards que aparecen
+    function animateEntering(from, to, dir) {
+        for (let i = from; i < to && i < cards.length; i++) {
+            const card = cards[i];
+            card.classList.remove('entering');
+            void card.offsetWidth; // reinicia la animación
+            card.style.setProperty('--dir', dir);
+            card.style.animationDelay = ((i - from) * 0.08) + 's';
+            card.classList.add('entering');
+        }
+    }
+
+    function move(direction) {
+        const newIndex = Math.max(0, Math.min(maxIndex(), index + direction * visible));
+        if (newIndex === index) return;
+
+        index = newIndex;
+        render();                                  
+        animateEntering(index, index + visible, direction);
+    }
+
+    prevBtn.addEventListener('click', () => move(-1));
+    nextBtn.addEventListener('click', () => move(1));
+
+    cards.forEach(card => {
+        card.addEventListener('animationend', () => {
+            card.classList.remove('entering');
+            card.style.animationDelay = '';
+        });
+    });
+
+    new ResizeObserver(layout).observe(carousel);
+    layout();
+}

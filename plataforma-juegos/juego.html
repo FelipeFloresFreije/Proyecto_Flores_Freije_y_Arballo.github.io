@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peg Solitaire - Minijuegos</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body class="home-body">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <aside class="sidebar" id="sidebar" aria-label="Menú lateral" aria-hidden="true">
+
+            <button type="button" class="sidebar-close small" id="sidebarClose">
+                <img src="assets/icons/close.svg" alt="" class="icons"> Cerrar.
+            </button>
+
+            <div class="sidebar-group">
+                <div class="sidebar-link small">
+                    <img src="assets/icons/user icon.svg" alt="" class="icons">
+                    <span class="body">Nombre de Usuario. @Batman fan</span>
+                </div>
+                <div class="sidebar-link small">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <span>Nivel 15.</span>
+                </div>
+                <div class="sidebar-link small"><img src="assets/icons/gamepad.svg" alt="" class="icons"> 34 juegos jugados.</div>
+                <div class="sidebar-link small"><img src="assets/icons/heart.svg" alt="" class="icons"> 10 favoritos.</div>
+            </div>
+
+            <nav class="sidebar-group" aria-label="Juegos">
+                <a href="index.html" class="sidebar-link body"><img src="assets/icons/gamepad.svg" alt="" class="icons">Todos los juegos.</a>
+                <a href="index.html" class="sidebar-link small"><img src="assets/icons/fire-flame.svg" alt="" class="icons"> Populares.</a>
+                <a href="#" class="sidebar-link small"><img src="assets/icons/favorite.svg" alt="" class="icons"> Favoritos.</a>
+                <a href="#" class="sidebar-link small"><img src="assets/icons/folder.svg" alt="" class="icons"> Descargados</a>
+            </nav>
+
+            <nav class="sidebar-group" aria-label="Categorías">
+                <a href="index.html" class="sidebar-link small"><img src="assets/icons/action.svg" alt="" class="icons"> Acción.</a>
+                <a href="index.html" class="sidebar-link small"><img src="assets/icons/car.svg" alt="" class="icons"> Carreras.</a>
+                <a href="index.html" class="sidebar-link small"><img src="assets/icons/sports.svg" alt="" class="icons"> Deportes.</a>
+            </nav>
+
+            <div class="sidebar-group">
+                <div class="sidebar-link small"><img src="assets/icons/folder.svg" alt="" class="icons"> Historial:</div>
+                <ul class="sidebar-history small">
+                    <li>Batman Arkham Knight</li>
+                    <li>Batman: Arkham City</li>
+                    <li>Batman Arkham Asylum</li>
+                    <li>Gotham Knights</li>
+                    <li>Peg Solitaire</li>
+                </ul>
+            </div>
+
+            <nav class="sidebar-group" aria-label="Ajustes">
+                <a href="#" class="sidebar-link small"><img src="assets/icons/wrench.svg" alt="" class="icons"> Configuración</a>
+                <a href="#" class="sidebar-link small"><img src="assets/icons/phone.svg" alt="" class="icons"> Ayuda.</a>
+                <a href="#" class="sidebar-link small"><img src="assets/icons/terms.svg" alt="" class="icons"> Términos y privacidad.</a>
+            </nav>
+
+            <a href="login.html" class="sidebar-link sidebar-logout small">
+                <img src="assets/icons/close-sesion.svg" alt="" class="icons"> Cerrar Sesión.
+            </a>
+
+        </aside>
+
+    <!-- HEADER -->
+    <header>
+
+        <div class="header-container">
+
+            <div class="header-left">
+
+                <button type="button" id="menuBtn" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+                    <img src="assets/icons/menu.svg" alt="" class="icons-medium">
+                </button>
+
+                <a href="index.html"><img src="assets/img/logo-batman.svg" alt="Logo Minijuegos" class="logo"></a>
+
+            </div>
+
+            <input type="search" class="search-bar" placeholder="Buscar juegos..." aria-label="Buscar juegos">
+
+            <div class="header-right">
+
+                <button type="button" aria-label="Favoritos">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons-medium">
+                </button>
+
+                <button type="button" aria-label="Perfil de usuario">
+                    <img src="assets/icons/user icon.svg" alt="user icon" class="icons-medium">
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <main class="game-page">
+
+        <!-- BREADCRUMB -->
+        <nav class="breadcrumb small" aria-label="Breadcrumb">
+            <a href="index.html">Home</a> &gt;
+            <a href="#">Puzzle</a> &gt;
+            <span aria-current="page">Peg Solitaire</span>
+        </nav>
+
+        <!-- REPRODUCTOR -->
+        <section class="game-player" aria-label="Juego">
+
+            <div class="game-stage" id="gameStage">
+                <img src="assets/img/telltale.jpg" alt="Portada de Peg Solitaire" class="game-stage-image">
+                <button type="button" class="btn btn-small btn-primary game-play">Jugar</button>
+            </div>
+
+            <div class="game-actions">
+
+                <button type="button" class="game-action small" data-action="favorite">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    Favoritos
+                </button>
+
+                <button type="button" class="game-action small" data-action="like">
+                    <img src="assets/icons/pulgar-arriba.svg" alt="" class="icons">
+                    Me gusta
+                </button>
+
+                <button type="button" class="game-action small" data-action="dislike">
+                    <img src="assets/icons/pulgar-abajo.svg" alt="" class="icons">
+                    No me gusta
+                </button>
+
+                <button type="button" class="game-action small" data-action="fullscreen">
+                    <img src="assets/icons/expandir.svg" alt="" class="icons">
+                    Pantalla Completa
+                </button>
+
+            </div>
+
+        </section>
+
+        <!-- CÓMO JUGAR + ACERCA DEL JUEGO -->
+        <section class="info-grid">
+
+            <article class="info-card">
+                <h2>Cómo Jugar.</h2>
+                <p class="card-text">Aprende a dominar las habilidades de Batman mientras recorres Gotham City.</p>
+                <p class="card-text">Combina ataques cuerpo a cuerpo, gadgets y movimientos especiales para enfrentarte a los enemigos.</p>
+                <p class="card-text">Explora el entorno, utiliza el sigilo cuando sea necesario y resuelve los desafíos que encuentres durante la aventura.</p>
+                <p class="card-text">Observa tu entorno, administra tus recursos y elige la estrategia adecuada para superar cada situación.</p>
+                <p class="card-text">La clave está en aprovechar todas las herramientas del Caballero Oscuro.</p>
+            </article>
+
+            <article class="info-card">
+                <h2>Acerca del juego.</h2>
+                <p class="card-text">Ponte en la piel de Batman y recorre Gotham City en una aventura llena de acción, misterio y combate.</p>
+                <p class="card-text">Enfréntate a peligrosos criminales, resuelve enigmas y utiliza tus habilidades, gadgets y estrategia para proteger la ciudad de las amenazas que acechan desde las sombras.</p>
+                <p class="card-text">Explora Gotham, descubre secretos y demuestra que incluso en la oscuridad siempre hay alguien dispuesto a luchar por la justicia.</p>
+            </article>
+
+        </section>
+
+        <!-- GALERÍA -->
+        <section class="gallery">
+
+            <h2>Galería</h2>
+
+            <div class="gallery-grid">
+                <figure class="gallery-item"><img src="assets/img/galeria-1.jpg" alt="Captura 1 del juego"></figure>
+                <figure class="gallery-item"><img src="assets/img/galeria-2.jpg" alt="Captura 2 del juego"></figure>
+                <figure class="gallery-item"><img src="assets/img/galeria-3.jpg" alt="Captura 3 del juego"></figure>
+                <figure class="gallery-item"><img src="assets/img/galeria-4.jpg" alt="Captura 4 del juego"></figure>
+            </div>
+
+        </section>
+
+        <!-- COMUNIDAD -->
+        <section class="community">
+
+            <h2>Comunidad.</h2>
+
+            <form class="comment-form" id="commentForm">
+                <label class="small" for="comment">Escriba su comentario</label>
+                <input type="text" id="comment" name="comment" autocomplete="off">
+                <button type="submit" class="btn btn-tiny btn-secondary">Enviar</button>
+            </form>
+
+            <div id="commentList">
+
+                <article class="comment">
+
+                    <div class="comment-author">
+                        <img src="assets/icons/user icon.svg" alt="" class="icons">
+                        <span class="small">Usuario</span>
+                    </div>
+
+                    <p class="small">"Me encantó el juego, muy adictivo"</p>
+
+                    <span class="comment-time">Hace 2 horas</span>
+
+                    <button type="button" class="comment-like" aria-label="Me gusta este comentario">
+                        <img src="assets/icons/pulgar-arriba.svg" alt="" class="icons">
+                    </button>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- RECOMENDADOS -->
+    <section class="games-section">
+
+            <h2 class="carousel-title">Recomendados Para Ti.</h2>
+
+            <div class="carousel">
+
+                <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos anteriores">←</button>
+
+                <div class="games-grid">
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-arkham-knight.jpg" alt="Batman Arkham Knight" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-23%</div>
+                                <div class="card-text card-year">2015</div>
+                            </div>
+                            <h3 class="card-title">Batman Arkham Knight</h3>
+                            <div class="card-text card-rating">★ 4.8 (25.3k) | 63 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/lego-dc-super-villains.jpg" alt="LEGO DC Super-Villains" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">29.99</div>
+                                <div class="card-text card-year">2018</div>
+                            </div>
+                            <h3 class="card-title">LEGO DC Super-Villains</h3>
+                            <div class="card-text card-rating">★ 4.5 (12.4k) | 18 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/injustice-gods-among-us.jpg" alt="Injustice: Gods Among Us" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">19.99</div>
+                                <div class="card-text card-year">2013</div>
+                            </div>
+                            <h3 class="card-title">Injustice: Gods Among Us</h3>
+                            <div class="card-text card-rating">★ 4.6 (15.8k) | 25 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/portal-2.jpg" alt="Portal 2" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">9.99</div>
+                                <div class="card-text card-year">2011</div>
+                            </div>
+                            <h3 class="card-title">Portal 2</h3>
+                            <div class="card-text card-rating">★ 4.9 (31.2k) | 12 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/rocket-league.jpg" alt="Rocket League" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2015</div>
+                            </div>
+                            <h3 class="card-title">Rocket League</h3>
+                            <div class="card-text card-rating">★ 4.6 (28.7k) | 20 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-arkham-city.jpg" alt="Batman: Arkham City" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-40%</div>
+                                <div class="card-text card-year">2012</div>
+                            </div>
+                            <h3 class="card-title">Batman: Arkham City</h3>
+                            <div class="card-text card-rating">★ 4.9 (20.3k) | 7 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-telltale.jpg" alt="Batman: The Telltale Series" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2016</div>
+                            </div>
+                            <h3 class="card-title">Batman: The Telltale Series</h3>
+                            <div class="card-text card-rating">★ 4.4 (5k) | 10 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-asylum.jpg" alt="Batman Arkham Asylum" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-70%</div>
+                                <div class="card-text card-year">2008</div>
+                            </div>
+                            <h3 class="card-title">Batman Arkham Asylum</h3>
+                            <div class="card-text card-rating">★ 4.7 (12.3k) | 5 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/gotham-knights.jpg" alt="Gotham Knights" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2022</div>
+                            </div>
+                            <h3 class="card-title">Gotham Knights</h3>
+                            <div class="card-text card-rating">★ 3.5 (10k) | 70 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/injustice-2.jpg" alt="Injustice 2" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">39.99</div>
+                                <div class="card-text card-year">2017</div>
+                            </div>
+                            <h3 class="card-title">Injustice 2</h3>
+                            <div class="card-text card-rating">★ 4.7 (18.6k) | 30 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/lego-batman.jpg" alt="LEGO Batman: Legacy of the Dark Knight" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">39.99</div>
+                                <div class="card-text card-year">2025</div>
+                            </div>
+                            <h3 class="card-title">LEGO Batman: Legacy of the Dark Knight</h3>
+                            <div class="card-text card-rating">★ 4.6 (10.3k) | 30 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos siguientes">→</button>
+
+            </div>
+
+            <a href="index.html" class="see-all body">Ver todos.</a>
+
+        </section>
+
+    <!-- FOOTER -->
+    <footer>
+
+        <div class="footer-container">
+
+            <div class="footer-left">
+
+                <div class="footer-logo">
+                    <img src="assets/img/logo-batman.svg" alt="Logo Minijuegos" class="logo">
+                    <h2>Minijuegos</h2>
+                </div>
+
+                <div class="footer-legal">
+                    <p class="body">© Minijuegos.</p>
+                    <p class="body">Todos los derechos reservados.</p>
+                    <p class="body">Todas las marcas registradas pertenecen a sus respectivos dueños en EE. UU. y otros países.</p>
+                    <p class="body">Todos los precios incluyen IVA (donde sea aplicable).</p>
+                </div>
+
+                <div class="footer-social">
+                    <a href="#" aria-label="TikTok"><img src="assets/icons/tiktok.svg" alt="" class="icons"></a>
+                    <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.svg" alt="" class="icons"></a>
+                    <a href="#" aria-label="Twitter"><img src="assets/icons/twitter.svg" alt="" class="icons"></a>
+                    <a href="#" aria-label="Telegram"><img src="assets/icons/telegram.svg" alt="" class="icons"></a>
+                    <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.svg" alt="" class="icons"></a>
+                    <a href="#" aria-label="Discord"><img src="assets/icons/discord.svg" alt="" class="icons"></a>
+                </div>
+
+            </div>
+
+            <div class="footer-right">
+
+                <nav class="footer-columns" aria-label="Enlaces del sitio">
+
+                    <div class="footer-col">
+                        <h3 class="body">JUEGOS</h3>
+                        <ul>
+                            <li><a class="small" href="index.html">Librería de juegos</a></li>
+                            <li><a class="small" href="index.html">Rankings</a></li>
+                            <li><a class="small" href="index.html">Populares</a></li>
+                            <li><a class="small" href="index.html">Favoritos</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h3 class="body">CATEGORÍAS</h3>
+                        <ul>
+                            <li><a class="small" href="index.html">Acción</a></li>
+                            <li><a class="small" href="index.html">Puzzle</a></li>
+                            <li><a class="small" href="index.html">Aventura</a></li>
+                            <li><a class="small" href="index.html">Estrategia</a></li>
+                            <li><a class="small" href="index.html">Deportes</a></li>
+                            <li><a class="small" href="index.html">Carreras</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h3 class="body">AYUDA</h3>
+                        <ul>
+                            <li><a class="small" href="#">FAQ</a></li>
+                            <li><a class="small" href="#">Soporte</a></li>
+                            <li><a class="small" href="#">Contacto</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h3 class="body">COMUNIDAD</h3>
+                        <ul>
+                            <li><a class="small" href="#">Eventos</a></li>
+                            <li><a class="small" href="#">Foros</a></li>
+                            <li><a class="small" href="#">Redes</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-col">
+                        <h3 class="body">LEGAL</h3>
+                        <ul>
+                            <li><a class="small" href="#">Nosotros</a></li>
+                            <li><a class="small" href="#">Términos y condiciones</a></li>
+                            <li><a class="small" href="#">Privacidad</a></li>
+                        </ul>
+                    </div>
+
+                </nav>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+    <script src="js/carousel.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/session.js"></script>
+</body>
+
+</html>

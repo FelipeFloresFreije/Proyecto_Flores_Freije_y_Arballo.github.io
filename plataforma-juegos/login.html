@@ -28,7 +28,7 @@
 
             <h2>Iniciar Sesión</h2>
 
-            <form>
+            <form id="loginForm" novalidate>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -39,15 +39,10 @@
                 <div class="form-group">
                     <label for="password">Contraseña:</label>
 
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        required
-                    >
+                    <input type="password" id="password" name="password" required>
                 </div>
 
-                <div class="login-options">
+                <div class="checkbox-row">
                     <input type="checkbox" id="forgot-password" name="forgot-password">
 
                     <label for="forgot-password">¿Olvidaste tu contraseña?</label>
@@ -63,24 +58,24 @@
 
             <div class="social-buttons">
 
-                <button type="button">
-                    <img src="assets/icons/twitter.svg" alt="Twitter" class="icons">
+                <button type="button" aria-label="Twitter">
+                    <a href="index.html"><img src="assets/icons/twitter.svg" alt="" class="icons"></a>
                 </button>
 
-                <button type="button">
-                    <img src="assets/icons/tiktok.svg" alt="TikTok" class="icons">
+                <button type="button" aria-label="TikTok">
+                    <a href="index.html"><img src="assets/icons/tiktok.svg" alt="" class="icons"></a>
                 </button>
 
-                <button type="button">
-                    <img src="assets/icons/facebook.svg" alt="Facebook" class="icons">
+                <button type="button" aria-label="Facebook">
+                    <a href="index.html"><img src="assets/icons/facebook.svg" alt="" class="icons"></a>
                 </button>
 
-                <button type="button">
-                    <img src="assets/icons/instagram.svg" alt="Instagram" class="icons">
+                <button type="button" aria-label="Instagram">
+                    <a href="index.html"><img src="assets/icons/instagram.svg" alt="" class="icons"></a>
                 </button>
 
-                <button type="button">
-                    <img src="assets/icons/google.svg" alt="Google" class="icons">
+                <button type="button" aria-label="Google">
+                    <a href="index.html"><img src="assets/icons/google.svg" alt="" class="icons"></a>
                 </button>
 
             </div>
@@ -89,9 +84,7 @@
 
                 <p>¿No tienes cuenta?</p>
 
-                <a href="registro.html">
-                    Crear cuenta.
-                </a>
+                <a href="registro.html">Crear cuenta.</a>
 
             </div>
 
@@ -99,6 +92,7 @@
 
     </main>
 
+    <script src="js/registro.js"></script>
 </body>
 
 </html>

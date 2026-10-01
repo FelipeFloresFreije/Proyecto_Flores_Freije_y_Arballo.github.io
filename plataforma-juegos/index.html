@@ -4,826 +4,688 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Minijuegos - Plataforma de Juegos Online</title>
-
     <link rel="stylesheet" href="css/style.css">
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="home-body">
 
-    <!-- HEADER -->
-    <header>
-        <div class="header-container">
+    <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <p id="loadingPercent" class="loading-percent">0%</p>
+        <div class="loading-track"><div id="loadingBar" class="loading-bar"></div></div>
+    </div>
 
-            <div class="header-left">
+    <div id="mainContent" class="is-hidden">
 
-                <img src="assets/img/logo-batman.svg" alt="Logo Minijuegos" class="logo">
+        <!-- SIDEBAR -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-                <button type="button" aria-label="Abrir menú">
-                    <img src="assets/icons/menu.svg" alt="" class="icons">
-                </button>
+        <aside class="sidebar" id="sidebar" aria-label="Menú lateral" aria-hidden="true">
 
-            </div>
+            <button type="button" class="sidebar-close small" id="sidebarClose">
+                <img src="assets/icons/close.svg" alt="" class="icons"> Cerrar.
+            </button>
 
-            <input type="search" class="search-bar" placeholder="Buscar juegos..." aria-label="Buscar juegos">
-
-            <div class="header-right">
-
-                <buttontype="button" aria-label="Favoritos">
-                    <img src="assets/icons/favorite.svg" alt="" class="icons">
-                </button>
-
-                <button type="button" aria-label="Perfil de usuario">
+            <div class="sidebar-group">
+                <div class="sidebar-link small">
                     <img src="assets/icons/user icon.svg" alt="" class="icons">
-                </button>
-
+                    <span id="sidebarUser" class="body">Nombre de Usuario. @Batman fan</span>
+                </div>
+                <div class="sidebar-link small">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <span>Nivel 15.</span>
+                </div>
+                <div class="sidebar-link small"><img src="assets/icons/gamepad.svg" alt="" class="icons"> 34 juegos jugados.</div>
+                <div class="sidebar-link small"><img src="assets/icons/heart.svg" alt="" class="icons"> 10 favoritos.</div>
             </div>
 
-        </div>
-    </header>
+            <nav class="sidebar-group" aria-label="Juegos">
+                <a href="index.html" class="sidebar-link body"><img src="assets/icons/gamepad.svg" alt="" class="icons">Todos los juegos.</a>
+                <a href="index.html" class="sidebar-link small"><img src="assets/icons/fire-flame.svg" alt="" class="icons"> Populares.</a>
+                <a href="#" class="sidebar-link small"><img src="assets/icons/favorite.svg" alt="" class="icons"> Favoritos.</a>
+                <a href="#" class="sidebar-link small"><img src="assets/icons/folder.svg" alt="" class="icons"> Descargados</a>
+            </nav>
 
+            <nav class="sidebar-group" aria-label="Categorías">
+                <a href="index.html" class="sidebar-link small"><img src="assets/icons/action.svg" alt="" class="icons"> Acción.</a>
+                <a href="index.html" class="sidebar-link small"><img src="assets/icons/car.svg" alt="" class="icons"> Carreras.</a>
+                <a href="index.html" class="sidebar-link small"><img src="assets/icons/sports.svg" alt="" class="icons"> Deportes.</a>
+            </nav>
 
-    <!-- HERO -->
-    <section class="hero">
+            <div class="sidebar-group">
+                <div class="sidebar-link small"><img src="assets/icons/folder.svg" alt="" class="icons"> Historial:</div>
+                <ul class="sidebar-history small">
+                    <li>Batman Arkham Knight</li>
+                    <li>Batman: Arkham City</li>
+                    <li>Batman Arkham Asylum</li>
+                    <li>Gotham Knights</li>
+                    <li>Peg Solitaire</li>
+                </ul>
+            </div>
 
-        <div class="hero-content">
+            <nav class="sidebar-group" aria-label="Ajustes">
+                <a href="#" class="sidebar-link small"><img src="assets/icons/wrench.svg" alt="" class="icons"> Configuración</a>
+                <a href="#" class="sidebar-link small"><img src="assets/icons/phone.svg" alt="" class="icons"> Ayuda.</a>
+                <a href="#" class="sidebar-link small"><img src="assets/icons/terms.svg" alt="" class="icons"> Términos y privacidad.</a>
+            </nav>
 
-            <h1>Peg Solitaire</h1>
+            <a href="login.html" class="sidebar-link sidebar-logout small">
+                <img src="assets/icons/close-sesion.svg" alt="" class="icons"> Cerrar Sesión.
+            </a>
 
-            <p>
-                Desafía tu ingenio en este clásico juego de lógica
-                temático del legendario superhéroe de DC Batman.
-                Elimina todas las piezas saltando una sobre otra
-                en un tablero desafiante.
-            </p>
+        </aside>
 
-            <buttontype="button" class="btn btn-large btn-primary">Jugar Ahora</button>
+        <!-- HEADER -->
+        <header>
 
-        </div>
+            <div class="header-container">
 
-        <img src="assets/img/peg-solitaire.png" alt="Tablero de Peg Solitaire" class="hero-image">
+                <div class="header-left">
 
-    </section>
-
-
-    <!-- RECOMENDADOS PARA TI -->
-    <section class="games-section">
-
-        <h2 class="carousel-title">Recomendados Para Ti.</h2>
-
-        <div class="carousel">
-
-            <button
-                type="button"
-                class="carousel-btn prev"
-                aria-label="Juegos anteriores"
-            >
-                ←
-            </button>
-
-            <div class="games-grid">
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/batman-arkham-knight.jpg"
-                        alt="Batman Arkham Knight"
-                    >
-
-                    <div class="card-badge">-23%</div>
-                    <div class="card-year">2015</div>
-
-                    <h3 class="card-title">
-                        Batman Arkham Knight
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.8 (25.3k) | 63 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
+                    <button type="button" id="menuBtn" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+                        <img src="assets/icons/menu.svg" alt="" class="icons-medium">
                     </button>
+
+                    <img src="assets/img/logo-batman.svg" alt="Logo Minijuegos" class="logo">
 
                 </div>
 
+                <input type="search" class="search-bar" placeholder="Buscar juegos..." aria-label="Buscar juegos">
 
-                <div class="game-card">
+                <div class="header-right">
 
-                    <img
-                        src="assets/img/batman-arkham-city.jpg"
-                        alt="Batman: Arkham City"
-                    >
-
-                    <div class="card-badge">-40%</div>
-                    <div class="card-year">2012</div>
-
-                    <h3 class="card-title">
-                        Batman: Arkham City
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.9 (20.3k) | 7 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
+                    <button type="button" aria-label="Favoritos">
+                        <img src="assets/icons/favorite.svg" alt="" class="icons-medium">
                     </button>
 
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/batman-telltale.jpg"
-                        alt="Batman: The Telltale Series"
-                    >
-
-                    <div class="card-badge">GRATIS</div>
-                    <div class="card-year">2016</div>
-
-                    <h3 class="card-title">
-                        Batman: The Telltale Series
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.4 (5k) | 10 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/batman-asylum.jpg"
-                        alt="Batman Arkham Asylum"
-                    >
-
-                    <div class="card-badge">-70%</div>
-                    <div class="card-year">2008</div>
-
-                    <h3 class="card-title">
-                        Batman Arkham Asylum
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.7 (12.3k) | 5 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/gotham-knights.jpg"
-                        alt="Gotham Knights"
-                    >
-
-                    <div class="card-badge">GRATIS</div>
-                    <div class="card-year">2022</div>
-
-                    <h3 class="card-title">
-                        Gotham Knights
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 3.5 (10k) | 70 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/lego-batman.jpg"
-                        alt="LEGO Batman"
-                    >
-
-                    <div class="card-badge">39.99</div>
-                    <div class="card-year">2025</div>
-
-                    <h3 class="card-title">
-                        LEGO Batman: Legacy of the Dark Knight
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.6 (10.3k) | 30 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
+                    <button type="button" aria-label="Perfil de usuario">
+                        <img src="assets/icons/user icon.svg" alt="user icon" class="icons-medium">
                     </button>
 
                 </div>
 
             </div>
 
-            <button
-                type="button"
-                class="carousel-btn next"
-                aria-label="Juegos siguientes"
-            >
-                →
-            </button>
+        </header>
 
-        </div>
+        <!-- HERO -->
+        <section class="hero">
 
-        <a href="#" class="see-all">Ver todos.</a>
+            <div class="hero-content">
 
-    </section>
+                <h1>Peg Solitaire</h1>
 
+                <p class="body">
+                    Desafía tu ingenio en este clásico juego de lógica
+                    temático del legendario superhéroe de DC Batman.
+                    Elimina todas las piezas saltando una sobre otra
+                    en un tablero desafiante.
+                </p>
 
-    <!-- MÁS POPULARES -->
-    <section class="games-section">
+                <a href="juego.html" class="btn btn-large btn-primary">Jugar Ahora</a>
 
-        <h2 class="carousel-title">Más Populares.</h2>
+            </div>
 
-        <div class="carousel">
+        </section>
 
-            <button
-                type="button"
-                class="carousel-btn prev"
-                aria-label="Juegos anteriores"
-            >
-                ←
-            </button>
+        <!-- CARRUSELES -->
 
-            <div class="games-grid">
+        <section class="games-section">
 
-                <div class="game-card">
+            <h2 class="carousel-title">Recomendados Para Ti.</h2>
 
-                    <img
-                        src="assets/img/batman-arkham-knight.jpg"
-                        alt="Batman Arkham Knight"
-                    >
+            <div class="carousel">
 
-                    <div class="card-badge">-23%</div>
-                    <div class="card-year">2015</div>
+                <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos anteriores">←</button>
 
-                    <h3 class="card-title">
-                        Batman Arkham Knight
-                    </h3>
+                <div class="games-grid">
 
-                    <div class="card-rating">
-                        ★ 4.8 (25.3k) | 63 GB
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-arkham-knight.jpg" alt="Batman Arkham Knight" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-23%</div>
+                                <div class="card-text card-year">2015</div>
+                            </div>
+                            <h3 class="card-title">Batman Arkham Knight</h3>
+                            <div class="card-text card-rating">★ 4.8 (25.3k) | 63 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
                     </div>
 
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/lego-dc-super-villains.jpg" alt="LEGO DC Super-Villains" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">29.99</div>
+                                <div class="card-text card-year">2018</div>
+                            </div>
+                            <h3 class="card-title">LEGO DC Super-Villains</h3>
+                            <div class="card-text card-rating">★ 4.5 (12.4k) | 18 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/injustice-gods-among-us.jpg" alt="Injustice: Gods Among Us" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">19.99</div>
+                                <div class="card-text card-year">2013</div>
+                            </div>
+                            <h3 class="card-title">Injustice: Gods Among Us</h3>
+                            <div class="card-text card-rating">★ 4.6 (15.8k) | 25 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/portal-2.jpg" alt="Portal 2" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">9.99</div>
+                                <div class="card-text card-year">2011</div>
+                            </div>
+                            <h3 class="card-title">Portal 2</h3>
+                            <div class="card-text card-rating">★ 4.9 (31.2k) | 12 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/rocket-league.jpg" alt="Rocket League" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2015</div>
+                            </div>
+                            <h3 class="card-title">Rocket League</h3>
+                            <div class="card-text card-rating">★ 4.6 (28.7k) | 20 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-arkham-city.jpg" alt="Batman: Arkham City" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-40%</div>
+                                <div class="card-text card-year">2012</div>
+                            </div>
+                            <h3 class="card-title">Batman: Arkham City</h3>
+                            <div class="card-text card-rating">★ 4.9 (20.3k) | 7 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-telltale.jpg" alt="Batman: The Telltale Series" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2016</div>
+                            </div>
+                            <h3 class="card-title">Batman: The Telltale Series</h3>
+                            <div class="card-text card-rating">★ 4.4 (5k) | 10 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-asylum.jpg" alt="Batman Arkham Asylum" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-70%</div>
+                                <div class="card-text card-year">2008</div>
+                            </div>
+                            <h3 class="card-title">Batman Arkham Asylum</h3>
+                            <div class="card-text card-rating">★ 4.7 (12.3k) | 5 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/gotham-knights.jpg" alt="Gotham Knights" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2022</div>
+                            </div>
+                            <h3 class="card-title">Gotham Knights</h3>
+                            <div class="card-text card-rating">★ 3.5 (10k) | 70 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/injustice-2.jpg" alt="Injustice 2" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">39.99</div>
+                                <div class="card-text card-year">2017</div>
+                            </div>
+                            <h3 class="card-title">Injustice 2</h3>
+                            <div class="card-text card-rating">★ 4.7 (18.6k) | 30 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/lego-batman.jpg" alt="LEGO Batman: Legacy of the Dark Knight" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">39.99</div>
+                                <div class="card-text card-year">2025</div>
+                            </div>
+                            <h3 class="card-title">LEGO Batman: Legacy of the Dark Knight</h3>
+                            <div class="card-text card-rating">★ 4.6 (10.3k) | 30 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
 
                 </div>
 
+                <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos siguientes">→</button>
 
-                <div class="game-card">
+            </div>
 
-                    <img
-                        src="assets/img/batman-arkham-city.jpg"
-                        alt="Batman: Arkham City"
-                    >
+            <a href="index.html" class="see-all body">Ver todos.</a>
 
-                    <div class="card-badge">-40%</div>
-                    <div class="card-year">2012</div>
+        </section>
 
-                    <h3 class="card-title">
-                        Batman: Arkham City
-                    </h3>
+        <section class="games-section">
 
-                    <div class="card-rating">
-                        ★ 4.9 (20.3k) | 7 GB
+            <h2 class="carousel-title">Más Populares.</h2>
+
+            <div class="carousel">
+
+                <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos anteriores">←</button>
+
+                <div class="games-grid">
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-arkham-knight.jpg" alt="Batman Arkham Knight" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-23%</div>
+                                <div class="card-text card-year">2015</div>
+                            </div>
+                            <h3 class="card-title">Batman Arkham Knight</h3>
+                            <div class="card-text card-rating">★ 4.8 (25.3k) | 63 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
                     </div>
 
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-arkham-city.jpg" alt="Batman: Arkham City" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-40%</div>
+                                <div class="card-text card-year">2012</div>
+                            </div>
+                            <h3 class="card-title">Batman: Arkham City</h3>
+                            <div class="card-text card-rating">★ 4.9 (20.3k) | 7 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/rocket-league.jpg" alt="Rocket League" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2015</div>
+                            </div>
+                            <h3 class="card-title">Rocket League</h3>
+                            <div class="card-text card-rating">★ 4.6 (28.7k) | 20 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-asylum.jpg" alt="Batman Arkham Asylum" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-70%</div>
+                                <div class="card-text card-year">2008</div>
+                            </div>
+                            <h3 class="card-title">Batman Arkham Asylum</h3>
+                            <div class="card-text card-rating">★ 4.7 (12.3k) | 5 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/gotham-knights.jpg" alt="Gotham Knights" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2022</div>
+                            </div>
+                            <h3 class="card-title">Gotham Knights</h3>
+                            <div class="card-text card-rating">★ 3.5 (10k) | 70 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/lego-batman.jpg" alt="LEGO Batman: Legacy of the Dark Knight" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">39.99</div>
+                                <div class="card-text card-year">2025</div>
+                            </div>
+                            <h3 class="card-title">LEGO Batman: Legacy of the Dark Knight</h3>
+                            <div class="card-text card-rating">★ 4.6 (10.3k) | 30 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-telltale.jpg" alt="Batman: The Telltale Series" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2016</div>
+                            </div>
+                            <h3 class="card-title">Batman: The Telltale Series</h3>
+                            <div class="card-text card-rating">★ 4.4 (5k) | 10 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
 
                 </div>
 
+                <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos siguientes">→</button>
 
-                <div class="game-card">
+            </div>
 
-                    <img
-                        src="assets/img/batman-asylum.jpg"
-                        alt="Batman Arkham Asylum"
-                    >
+            <a href="index.html" class="see-all body">Ver todos.</a>
 
-                    <div class="card-badge">-70%</div>
-                    <div class="card-year">2008</div>
+        </section>
 
-                    <h3 class="card-title">
-                        Batman Arkham Asylum
-                    </h3>
+        <section class="games-section">
 
-                    <div class="card-rating">
-                        ★ 4.7 (12.3k) | 5 GB
+            <h2 class="carousel-title">Mejor Valorados.</h2>
+
+            <div class="carousel">
+
+                <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos anteriores">←</button>
+
+                <div class="games-grid">
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-arkham-city.jpg" alt="Batman: Arkham City" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-40%</div>
+                                <div class="card-text card-year">2012</div>
+                            </div>
+                            <h3 class="card-title">Batman: Arkham City</h3>
+                            <div class="card-text card-rating">★ 4.9 (20.3k) | 7 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
                     </div>
 
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-arkham-knight.jpg" alt="Batman Arkham Knight" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-23%</div>
+                                <div class="card-text card-year">2015</div>
+                            </div>
+                            <h3 class="card-title">Batman Arkham Knight</h3>
+                            <div class="card-text card-rating">★ 4.8 (25.3k) | 63 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-asylum.jpg" alt="Batman Arkham Asylum" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">-70%</div>
+                                <div class="card-text card-year">2008</div>
+                            </div>
+                            <h3 class="card-title">Batman Arkham Asylum</h3>
+                            <div class="card-text card-rating">★ 4.7 (12.3k) | 5 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/suicide-squad.jpg" alt="The Suicide Squad: Kill the Justice League" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">59.99</div>
+                                <div class="card-text card-year">2024</div>
+                            </div>
+                            <h3 class="card-title">The Suicide Squad: Kill the Justice League</h3>
+                            <div class="card-text card-rating">★ 3.3 (8.2k) | 45 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/lego-batman.jpg" alt="LEGO Batman: Legacy of the Dark Knight" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">39.99</div>
+                                <div class="card-text card-year">2025</div>
+                            </div>
+                            <h3 class="card-title">LEGO Batman: Legacy of the Dark Knight</h3>
+                            <div class="card-text card-rating">★ 4.6 (10.3k) | 30 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/batman-telltale.jpg" alt="Batman: The Telltale Series" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2016</div>
+                            </div>
+                            <h3 class="card-title">Batman: The Telltale Series</h3>
+                            <div class="card-text card-rating">★ 4.4 (5k) | 10 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/lego-dc-super-villains.jpg" alt="LEGO DC Super-Villains" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">29.99</div>
+                                <div class="card-text card-year">2018</div>
+                            </div>
+                            <h3 class="card-title">LEGO DC Super-Villains</h3>
+                            <div class="card-text card-rating">★ 4.5 (12.4k) | 18 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="game-card-media">
+                            <img src="assets/img/gotham-knights.jpg" alt="Gotham Knights" class="game-card-image">
+                        </div>
+                        <div class="game-card-content">
+                            <div class="game-card-info">
+                                <div class="card-text card-badge">GRATIS</div>
+                                <div class="card-text card-year">2022</div>
+                            </div>
+                            <h3 class="card-title">Gotham Knights</h3>
+                            <div class="card-text card-rating">★ 3.5 (10k) | 70 GB</div>
+                            <a href="juego.html" class="btn btn-small btn-secondary">Jugar Ahora</a>
+                        </div>
+                    </div>
 
                 </div>
 
+                <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos siguientes">→</button>
 
-                <div class="game-card">
+            </div>
 
-                    <img
-                        src="assets/img/gotham-knights.jpg"
-                        alt="Gotham Knights"
-                    >
+            <a href="index.html" class="see-all body">Ver todos.</a>
 
-                    <div class="card-badge">GRATIS</div>
-                    <div class="card-year">2022</div>
+        </section>
 
-                    <h3 class="card-title">
-                        Gotham Knights
-                    </h3>
+        <!-- FOOTER -->
+        <footer>
 
-                    <div class="card-rating">
-                        ★ 3.5 (10k) | 70 GB
+            <div class="footer-container">
+
+                <div class="footer-left">
+
+                    <div class="footer-logo">
+                        <img src="assets/img/logo-batman.svg" alt="Logo Minijuegos" class="logo">
+                        <h2>Minijuegos</h2>
                     </div>
 
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
+                    <div class="footer-legal">
+                        <p class="body">© Minijuegos.</p>
+                        <p class="body">Todos los derechos reservados.</p>
+                        <p class="body">Todas las marcas registradas pertenecen a sus respectivos dueños en EE. UU. y otros países.</p>
+                        <p class="body">Todos los precios incluyen IVA (donde sea aplicable).</p>
+                    </div>
+
+                    <div class="footer-social">
+                        <a href="#" aria-label="TikTok"><img src="assets/icons/tiktok.svg" alt="" class="icons"></a>
+                        <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.svg" alt="" class="icons"></a>
+                        <a href="#" aria-label="Twitter"><img src="assets/icons/twitter.svg" alt="" class="icons"></a>
+                        <a href="#" aria-label="Telegram"><img src="assets/icons/telegram.svg" alt="" class="icons"></a>
+                        <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.svg" alt="" class="icons"></a>
+                        <a href="#" aria-label="Discord"><img src="assets/icons/discord.svg" alt="" class="icons"></a>
+                    </div>
 
                 </div>
 
+                <div class="footer-right">
 
-                <div class="game-card">
+                    <!-- decidimos dejar en blanco el href del footer de index.html para que el usuario pueda
+                         regresar al inicio de la pagina de una manera mas comoda sin tener que recargar la pagina
+                         y arruinar su experiencia -->
+                    <nav class="footer-columns" aria-label="Enlaces del sitio">
 
-                    <img
-                        src="assets/img/lego-batman.jpg"
-                        alt="LEGO Batman"
-                    >
+                        <div class="footer-col">
+                            <h3 class="body">JUEGOS</h3>
+                            <ul>
+                                <li><a class="small" href="#">Librería de juegos</a></li>
+                                <li><a class="small" href="#">Rankings</a></li>
+                                <li><a class="small" href="#">Populares</a></li>
+                                <li><a class="small" href="#">Favoritos</a></li>
+                            </ul>
+                        </div>
 
-                    <div class="card-badge">39.99</div>
-                    <div class="card-year">2025</div>
+                        <div class="footer-col">
+                            <h3 class="body">CATEGORÍAS</h3>
+                            <ul>
+                                <li><a class="small" href="#">Acción</a></li>
+                                <li><a class="small" href="#">Puzzle</a></li>
+                                <li><a class="small" href="#">Aventura</a></li>
+                                <li><a class="small" href="#">Estrategia</a></li>
+                                <li><a class="small" href="#">Deportes</a></li>
+                                <li><a class="small" href="#">Carreras</a></li>
+                            </ul>
+                        </div>
 
-                    <h3 class="card-title">
-                        LEGO Batman: Legacy of the Dark Knight
-                    </h3>
+                        <div class="footer-col">
+                            <h3 class="body">AYUDA</h3>
+                            <ul>
+                                <li><a class="small" href="#">FAQ</a></li>
+                                <li><a class="small" href="#">Soporte</a></li>
+                                <li><a class="small" href="#">Contacto</a></li>
+                            </ul>
+                        </div>
 
-                    <div class="card-rating">
-                        ★ 4.6 (10.3k) | 30 GB
-                    </div>
+                        <div class="footer-col">
+                            <h3 class="body">COMUNIDAD</h3>
+                            <ul>
+                                <li><a class="small" href="#">Eventos</a></li>
+                                <li><a class="small" href="#">Foros</a></li>
+                                <li><a class="small" href="#">Redes</a></li>
+                            </ul>
+                        </div>
 
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
+                        <div class="footer-col">
+                            <h3 class="body">LEGAL</h3>
+                            <ul>
+                                <li><a class="small" href="#">Nosotros</a></li>
+                                <li><a class="small" href="#">Términos y condiciones</a></li>
+                                <li><a class="small" href="#">Privacidad</a></li>
+                            </ul>
+                        </div>
 
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/batman-telltale.jpg"
-                        alt="Batman: The Telltale Series"
-                    >
-
-                    <div class="card-badge">GRATIS</div>
-                    <div class="card-year">2016</div>
-
-                    <h3 class="card-title">
-                        Batman: The Telltale Series
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.4 (5k) | 10 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
+                    </nav>
 
                 </div>
 
             </div>
 
-            <button
-                type="button"
-                class="carousel-btn next"
-                aria-label="Juegos siguientes"
-            >
-                →
-            </button>
+        </footer>
 
-        </div>
+    </div>
 
-        <a href="#" class="see-all">Ver todos.</a>
-
-    </section>
-
-
-    <!-- MEJOR VALORADOS -->
-    <section class="games-section">
-
-        <h2 class="carousel-title">Mejor Valorados.</h2>
-
-        <div class="carousel">
-
-            <button
-                type="button"
-                class="carousel-btn prev"
-                aria-label="Juegos anteriores"
-            >
-                ←
-            </button>
-
-            <div class="games-grid">
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/batman-arkham-city.jpg"
-                        alt="Batman: Arkham City"
-                    >
-
-                    <div class="card-badge">-40%</div>
-                    <div class="card-year">2012</div>
-
-                    <h3 class="card-title">
-                        Batman: Arkham City
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.9 (20.3k) | 7 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/batman-arkham-knight.jpg"
-                        alt="Batman Arkham Knight"
-                    >
-
-                    <div class="card-badge">-23%</div>
-                    <div class="card-year">2015</div>
-
-                    <h3 class="card-title">
-                        Batman Arkham Knight
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.8 (25.3k) | 63 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/batman-asylum.jpg"
-                        alt="Batman Arkham Asylum"
-                    >
-
-                    <div class="card-badge">-70%</div>
-                    <div class="card-year">2008</div>
-
-                    <h3 class="card-title">
-                        Batman Arkham Asylum
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.7 (12.3k) | 5 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/lego-batman.jpg"
-                        alt="LEGO Batman"
-                    >
-
-                    <div class="card-badge">39.99</div>
-                    <div class="card-year">2025</div>
-
-                    <h3 class="card-title">
-                        LEGO Batman: Legacy of the Dark Knight
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.6 (10.3k) | 30 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/batman-telltale.jpg"
-                        alt="Batman: The Telltale Series"
-                    >
-
-                    <div class="card-badge">GRATIS</div>
-                    <div class="card-year">2016</div>
-
-                    <h3 class="card-title">
-                        Batman: The Telltale Series
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 4.4 (5k) | 10 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-
-                <div class="game-card">
-
-                    <img
-                        src="assets/img/gotham-knights.jpg"
-                        alt="Gotham Knights"
-                    >
-
-                    <div class="card-badge">GRATIS</div>
-                    <div class="card-year">2022</div>
-
-                    <h3 class="card-title">
-                        Gotham Knights
-                    </h3>
-
-                    <div class="card-rating">
-                        ★ 3.5 (10k) | 70 GB
-                    </div>
-
-                    <button
-                        type="button"
-                        class="btn btn-small btn-secondary"
-                    >
-                        Jugar Ahora
-                    </button>
-
-                </div>
-
-            </div>
-
-            <button
-                type="button"
-                class="carousel-btn next"
-                aria-label="Juegos siguientes"
-            >
-                →
-            </button>
-
-        </div>
-
-        <a href="#" class="see-all">Ver todos.</a>
-
-    </section>
-
-
-    <!-- FOOTER -->
-    <footer>
-
-        <div class="footer-container">
-
-            <div class="footer-logo">
-
-                <img
-                    src="assets/img/logo-batman.svg"
-                    alt="Logo Minijuegos"
-                    class="logo"
-                >
-
-                <h3>Minijuegos</h3>
-
-            </div>
-
-
-            <div class="footer-columns">
-
-                <div class="footer-col">
-                    <h4>NAVEGACIÓN</h4>
-
-                    <ul>
-                        <li><a href="#">Librería de juegos</a></li>
-                        <li><a href="#">Plataformas</a></li>
-                        <li><a href="#">Rankings</a></li>
-                        <li><a href="#">Blog</a></li>
-                    </ul>
-                </div>
-
-
-                <div class="footer-col">
-                    <h4>SOBRE NOSOTROS</h4>
-
-                    <ul>
-                        <li><a href="#">Nosotros</a></li>
-                        <li><a href="#">Contacto</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Carrera</a></li>
-                    </ul>
-                </div>
-
-
-                <div class="footer-col">
-                    <h4>AYUDA</h4>
-
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Soporte</a></li>
-                        <li><a href="#">Privacidad</a></li>
-                        <li><a href="#">Términos</a></li>
-                    </ul>
-                </div>
-
-
-                <div class="footer-col">
-                    <h4>COMUNIDAD</h4>
-
-                    <ul>
-                        <li><a href="#">Contenido</a></li>
-                        <li><a href="#">Redes</a></li>
-                        <li><a href="#">Eventos</a></li>
-                        <li><a href="#">Foros</a></li>
-                    </ul>
-                </div>
-
-
-                <div class="footer-col">
-                    <h4>MI CUENTA</h4>
-
-                    <ul>
-                        <li><a href="registro.html">Registro</a></li>
-                        <li><a href="#">Historial</a></li>
-                        <li><a href="#">Perfil</a></li>
-                        <li><a href="#">Carrito</a></li>
-                    </ul>
-                </div>
-
-
-                <div class="footer-col">
-                    <h4>SUSCRIPCIÓN</h4>
-
-                    <ul>
-                        <li><a href="#">Correo</a></li>
-                        <li><a href="#">Mi suscripción</a></li>
-                        <li><a href="#">Privacidad</a></li>
-                        <li><a href="#">Frecuencia</a></li>
-                    </ul>
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="footer-newsletter">
-
-            <p>Email:</p>
-
-            <input
-                type="email"
-                placeholder="tu@email.com"
-                aria-label="Correo electrónico"
-            >
-
-            <button
-                type="button"
-                class="btn btn-small btn-primary"
-            >
-                Enviar
-            </button>
-
-        </div>
-
-
-        <div class="footer-social">
-
-            <a href="#" aria-label="TikTok">
-                <img src="assets/icons/tiktok.svg" alt="" class="icons">
-            </a>
-
-            <a href="#" aria-label="Facebook">
-                <img src="assets/icons/facebook.svg" alt="" class="icons">
-            </a>
-
-            <a href="#" aria-label="Twitter">
-                <img src="assets/icons/twitter.svg" alt="" class="icons">
-            </a>
-
-            <a href="#" aria-label="Telegram">
-                <img src="assets/icons/telegram.svg" alt="" class="icons">
-            </a>
-
-            <a href="#" aria-label="Instagram">
-                <img src="assets/icons/instagram.svg" alt="" class="icons">
-            </a>
-
-            <a href="#" aria-label="Discord">
-                <img src="assets/icons/discord.svg" alt="" class="icons">
-            </a>
-
-        </div>
-
-
-        <p class="footer-copyright">
-            © 2026 MINIJUEGOS. Todos los derechos reservados.
-        </p>
-
-    </footer>
-
+    <script src="js/loading.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/carousel.js"></script>
+    <script src="js/session.js"></script>
 </body>
+
 </html>

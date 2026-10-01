@@ -1,26 +1,34 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const loading = document.getElementById('loading');
     const mainContent = document.getElementById('mainContent');
     const percentElement = document.getElementById('loadingPercent');
-    
-    let percent = 0;
-    const duration = 5000; // 5 segundos
-    const interval = 50;
-    const increment = 100 / (duration / interval);
-    
-    const loadingInterval = setInterval(() => {
-        percent += increment;
-        
-        if (percent >= 100) {
-            percent = 100;
-            clearInterval(loadingInterval);
-            
-            setTimeout(() => {
-                loading.style.display = 'none';
-                mainContent.style.display = 'block';
-            }, 300);
+    const bar = document.getElementById('loadingBar');
+
+    const DURATION = 5000; // 5 segundos exactos
+    const start = performance.now();
+
+    function update(now) {
+        const progress = Math.min((now - start) / DURATION, 1);
+        const percent = Math.floor(progress * 100);
+
+        percentElement.textContent = percent + '%';
+        bar.style.width = percent + '%';
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        } else {
+            setTimeout(finish, 300);
         }
-        
-        percentElement.textContent = Math.floor(percent);
-    }, interval);
+    }
+
+    function finish() {
+        loading.classList.add('hidden');
+        mainContent.classList.remove('is-hidden');
+
+        loading.addEventListener('transitionend', () => {
+            loading.style.display = 'none';
+        }, { once: true });
+    }
+
+    requestAnimationFrame(update);
 });
