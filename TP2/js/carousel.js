@@ -71,11 +71,12 @@ function initCarousel(carousel) {
 
     function render() {
         track.style.transform = 'translateX(' + (-index * step) + 'px)';
-        prevBtn.disabled = index <= 0;
-        nextBtn.disabled = index >= maxIndex();
+
+        const noScroll = maxIndex() === 0;
+        prevBtn.disabled = noScroll;
+        nextBtn.disabled = noScroll;
     }
 
-    // Animación de entrada escalonada solo para las cards que aparecen
     function animateEntering(from, to, dir) {
         for (let i = from; i < to && i < cards.length; i++) {
             const card = cards[i];
@@ -88,11 +89,21 @@ function initCarousel(carousel) {
     }
 
     function move(direction) {
-        const newIndex = Math.max(0, Math.min(maxIndex(), index + direction * visible));
+        const max = maxIndex();
+        if (max === 0) return;
+
+        let newIndex = index + direction * visible;
+
+        if (newIndex > max) {
+            newIndex = (index >= max) ? 0 : max;
+        } else if (newIndex < 0) {
+            newIndex = (index <= 0) ? max : 0;
+        }
+
         if (newIndex === index) return;
 
         index = newIndex;
-        render();                                  
+        render();
         animateEntering(index, index + visible, direction);
     }
 

@@ -24,50 +24,124 @@
                 <img src="assets/icons/close.svg" alt="" class="icons"> Cerrar.
             </button>
 
-            <div class="sidebar-group">
-                <div class="sidebar-link small">
-                    <img src="assets/icons/user icon.svg" alt="" class="icons">
-                    <span class="body">Nombre de Usuario. @Batman fan</span>
-                </div>
-                <div class="sidebar-link small">
-                    <img src="assets/icons/favorite.svg" alt="" class="icons">
-                    <img src="assets/icons/favorite.svg" alt="" class="icons">
-                    <img src="assets/icons/favorite.svg" alt="" class="icons">
-                    <span>Nivel 15.</span>
-                </div>
-                <div class="sidebar-link small"><img src="assets/icons/gamepad.svg" alt="" class="icons"> 34 juegos jugados.</div>
-                <div class="sidebar-link small"><img src="assets/icons/heart.svg" alt="" class="icons"> 10 favoritos.</div>
-            </div>
-
             <nav class="sidebar-group" aria-label="Juegos">
-                <a href="index.html" class="sidebar-link body"><img src="assets/icons/gamepad.svg" alt="" class="icons">Todos los juegos.</a>
-                <a href="index.html" class="sidebar-link small"><img src="assets/icons/fire-flame.svg" alt="" class="icons"> Populares.</a>
-                <a href="#" class="sidebar-link small"><img src="assets/icons/favorite.svg" alt="" class="icons"> Favoritos.</a>
-                <a href="#" class="sidebar-link small"><img src="assets/icons/folder.svg" alt="" class="icons"> Descargados</a>
+                <h3 class="sidebar-title card-text">EXPLORAR</h3>
+                <a href="index.html" class="sidebar-link body active" aria-current="page">
+                    <img src="assets/icons/gamepad.svg" alt="" class="icons"> Todos los juegos.
+                </a>
+                <a href="index.html" class="sidebar-link small">
+                    <img src="assets/icons/fire-flame.svg" alt="" class="icons"> Populares.
+                </a>
+                <a href="#" class="sidebar-link small">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons"> Favoritos.
+                    <span class="sidebar-count card-text">10</span>
+                </a>
+                <a href="#" class="sidebar-link small">
+                    <img src="assets/icons/folder.svg" alt="" class="icons"> Descargados
+                </a>
             </nav>
 
             <nav class="sidebar-group" aria-label="Categorías">
-                <a href="index.html" class="sidebar-link small"><img src="assets/icons/action.svg" alt="" class="icons"> Acción.</a>
-                <a href="index.html" class="sidebar-link small"><img src="assets/icons/car.svg" alt="" class="icons"> Carreras.</a>
-                <a href="index.html" class="sidebar-link small"><img src="assets/icons/sports.svg" alt="" class="icons"> Deportes.</a>
+                <h3 class="sidebar-title card-text">CATEGORÍAS</h3>
+                <a href="index.html" class="sidebar-link small">
+                    <img src="assets/icons/action.svg" alt="" class="icons"> Acción.
+                    <span class="sidebar-count card-text">24</span>
+                </a>
+                <a href="index.html" class="sidebar-link small">
+                    <img src="assets/icons/car.svg" alt="" class="icons"> Carreras.
+                    <span class="sidebar-count card-text">12</span>
+                </a>
+                <a href="index.html" class="sidebar-link small">
+                    <img src="assets/icons/sports.svg" alt="" class="icons"> Deportes.
+                    <span class="sidebar-count card-text">9</span>
+                </a>
+                <!-- Estas necesitan ícono propio: exportalos de Figma con el mismo estilo -->
+                <a href="index.html" class="sidebar-link small">
+                    <img src="assets/icons/puzzle.svg" alt="" class="icons"> Puzzle.
+                    <span class="sidebar-count card-text">18</span>
+                </a>
+                <a href="index.html" class="sidebar-link small">
+                    <img src="assets/icons/adventure.svg" alt="" class="icons"> Aventura.
+                    <span class="sidebar-count card-text">15</span>
+                </a>
+                <a href="index.html" class="sidebar-link small">
+                    <img src="assets/icons/strategy.svg" alt="" class="icons"> Estrategia.
+                    <span class="sidebar-count card-text">7</span>
+                </a>
             </nav>
 
             <div class="sidebar-group">
-                <div class="sidebar-link small"><img src="assets/icons/folder.svg" alt="" class="icons"> Historial:</div>
-                <ul class="sidebar-history small">
-                    <li>Batman Arkham Knight</li>
-                    <li>Batman: Arkham City</li>
-                    <li>Batman Arkham Asylum</li>
-                    <li>Gotham Knights</li>
-                    <li>Peg Solitaire</li>
-                </ul>
+                <h3 class="sidebar-title card-text">SEGUÍ JUGANDO</h3>
+                <a href="juego.html" class="sidebar-continue">
+                    <img src="assets/img/peg.jpg" alt="" class="sidebar-continue-img">
+                    <div class="sidebar-continue-info">
+                        <span class="card-title">Peg Solitaire</span>
+                        <span class="card-text">Jugado hace 2 horas</span>
+                    </div>
+                </a>
             </div>
 
-            <nav class="sidebar-group" aria-label="Ajustes">
+            <div class="sidebar-community">
+                <img src="assets/icons/discord.svg" alt="" class="icons">
+                <p class="small">Unite a la comunidad y encontrá con quién jugar.</p>
+                <a href="https://discord.com" class="btn btn-medium btn-secondary">Unirme al Discord</a>
+            </div>
+
+        </aside>
+
+        <!-- PERFIL -->
+        <div class="sidebar-overlay" id="profileOverlay"></div>
+
+        <aside class="profile-panel" id="profilePanel" aria-label="Perfil de usuario" aria-hidden="true">
+
+            <button type="button" class="sidebar-close small profile-close" id="profileClose">
+                <img src="assets/icons/close.svg" alt="" class="icons"> Cerrar.
+            </button>
+
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <img src="assets/icons/user icon.svg" alt="" class="icons-medium">
+                </div>
+                <h2 id="sidebarUser">Nombre de Usuario</h2>
+                <p class="small profile-handle">@Batman fan</p>
+
+                <div class="profile-level">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <img src="assets/icons/favorite.svg" alt="" class="icons">
+                    <span class="small">Nivel 15</span>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <img src="assets/icons/gamepad.svg" alt="" class="icons">
+                    <strong class="body">34</strong>
+                    <span class="card-text">juegos jugados</span>
+                </div>
+                <div class="profile-stat">
+                    <img src="assets/icons/heart.svg" alt="" class="icons">
+                    <strong class="body">10</strong>
+                    <span class="card-text">favoritos</span>
+                </div>
+            </div>
+
+            <a href="#" class="btn btn-medium btn-primary profile-main-btn">Ver perfil completo</a>
+
+            <nav class="sidebar-group profile-divider" aria-label="Cuenta">
                 <a href="#" class="sidebar-link small"><img src="assets/icons/wrench.svg" alt="" class="icons"> Configuración</a>
                 <a href="#" class="sidebar-link small"><img src="assets/icons/phone.svg" alt="" class="icons"> Ayuda.</a>
                 <a href="#" class="sidebar-link small"><img src="assets/icons/terms.svg" alt="" class="icons"> Términos y privacidad.</a>
             </nav>
+
+            <div class="sidebar-group profile-divider">
+                <div class="sidebar-link small"><img src="assets/icons/folder.svg" alt="" class="icons"> Jugados recientemente:</div>
+                <ul class="sidebar-history small">
+                    <li>Batman Arkham Knight</li>
+                    <li>Batman: Arkham City</li>
+                    <li>Peg Solitaire</li>
+                </ul>
+            </div>
 
             <a href="login.html" class="sidebar-link sidebar-logout small">
                 <img src="assets/icons/close-sesion.svg" alt="" class="icons"> Cerrar Sesión.
@@ -75,38 +149,38 @@
 
         </aside>
 
-    <!-- HEADER -->
-    <header>
+        <!-- HEADER -->
+        <header>
 
-        <div class="header-container">
+            <div class="header-container">
 
-            <div class="header-left">
+                <div class="header-left">
 
-                <button type="button" id="menuBtn" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
-                    <img src="assets/icons/menu.svg" alt="" class="icons-medium">
-                </button>
+                    <button type="button" id="menuBtn" aria-label="Abrir menú" aria-controls="sidebar" aria-expanded="false">
+                        <img src="assets/icons/menu.svg" alt="" class="icons-medium">
+                    </button>
 
-                <a href="index.html"><img src="assets/img/logo-batman.svg" alt="Logo Minijuegos" class="logo"></a>
+                    <a href="index.html"><img src="assets/img/logo-batman.svg" alt="Logo Minijuegos" class="logo"></a>
+
+                </div>
+
+                <input type="search" class="search-bar" placeholder="Buscar juegos..." aria-label="Buscar juegos">
+
+                <div class="header-right">
+
+                    <button type="button" aria-label="Favoritos">
+                        <img src="assets/icons/favorite.svg" alt="" class="icons-medium">
+                    </button>
+
+                    <button type="button" id="profileBtn" aria-label="Perfil de usuario" aria-controls="profilePanel" aria-expanded="false">
+                        <img src="assets/icons/user icon.svg" alt="" class="icons-medium">
+                    </button>
+
+                </div>
 
             </div>
 
-            <input type="search" class="search-bar" placeholder="Buscar juegos..." aria-label="Buscar juegos">
-
-            <div class="header-right">
-
-                <button type="button" aria-label="Favoritos">
-                    <img src="assets/icons/favorite.svg" alt="" class="icons-medium">
-                </button>
-
-                <button type="button" aria-label="Perfil de usuario">
-                    <img src="assets/icons/user icon.svg" alt="user icon" class="icons-medium">
-                </button>
-
-            </div>
-
-        </div>
-
-    </header>
+        </header>
 
     <main class="game-page">
 
@@ -222,10 +296,12 @@
 
     </main>
 
-    <!-- RECOMENDADOS -->
     <section class="games-section">
 
-            <h2 class="carousel-title">Recomendados Para Ti.</h2>
+            <div class="carousel-header">
+                <h2 class="carousel-title">Recomendados Para Ti.</h2>
+                <a href="index.html" class="see-all body">Ver todos.</a>
+            </div>
 
             <div class="carousel">
 
@@ -403,8 +479,6 @@
                 <button type="button" class="btn btn-small btn-square btn-primary" aria-label="Juegos siguientes">→</button>
 
             </div>
-
-            <a href="index.html" class="see-all body">Ver todos.</a>
 
         </section>
 
