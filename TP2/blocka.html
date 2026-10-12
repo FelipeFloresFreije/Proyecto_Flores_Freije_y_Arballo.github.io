@@ -196,6 +196,14 @@
             <div class="game-stage" id="gameStage">
                 <img src="assets/img/peg.jpg" alt="Portada de Blocka" class="game-stage-image" id="stageCover">
                 <button type="button" class="btn btn-small btn-primary game-play" id="btnPlay">Comenzar</button>
+                <div class="blocka-config" id="blockaConfig">
+                    <label class="small" for="cantPiezas">Piezas</label>
+                    <select id="cantPiezas">
+                        <option value="4">4</option>
+                        <option value="6">6</option>
+                        <option value="8">8</option>
+                    </select>
+                </div>
                 <canvas id="blockaCanvas" width="600" height="600" class="is-hidden" aria-label="Tablero del juego Blocka"></canvas>
             </div>
 

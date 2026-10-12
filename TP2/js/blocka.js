@@ -4,35 +4,38 @@ const cover = document.getElementById('stageCover');
 const btnPlay = document.getElementById('btnPlay');
 const stage = document.getElementById('gameStage');
 
-const SIZE = canvas.width;
-const HALF = SIZE / 2;
+const LADO = 400;
+const CONFIGS = { 4: [2, 2], 6: [3, 2], 8: [4, 2] };
 
 const IMAGENES = [
-    'img1.jpg', 'img2.jpg', 'img3.jpg',
-    'img4.jpg', 'img5.jpg', 'img6.jpg'
+    'img1.jpg', 'img2.jpg', 'img3.jpg', 'img4.jpg', 
+    'img5.jpg', 'img6.jpg', 'img7.jpg', 'img8.jpg'
 ].map(nombre => 'assets/img/blocka/' + nombre);
 
 const NIVELES = [
     { nombre: 'Escala de grises', filtro: 'grises',   limite: null  },
-    { nombre: 'Brillo',           filtro: 'brillo',   limite: 120000 }, 
-    { nombre: 'Negativo',         filtro: 'negativo', limite: 90000  }  
+    { nombre: 'Brillo',           filtro: 'brillo',   limite: 120000 },
+    { nombre: 'Negativo',         filtro: 'negativo', limite: 90000  }
 ];
 
-const PENALIZACION_AYUDA = 5000; 
-const AYUDAS_MAX = 2;             
-const PAUSA_REVELAR = 1500;        
+const PENALIZACION_AYUDA = 5000;
+const AYUDAS_MAX = 2;
+const PAUSA_REVELAR = 1500;
 
 // ---------- Estado ----------
 let img = new Image();
-let original = null;     
-let filtrada = null;     
-let fuente = null;        
+let original = null;
+let filtrada = null;
+let fuente = null;
 let ultimaImagen = -1;
+let columnas = 2;
+let filas = 2;
+let piezas = 4;
 let rotaciones = [];
-let fijas = [];         
+let fijas = [];
 let ayudasUsadas = 0;
 let nivelActual = 0;
-let nivelId = 0;         
+let nivelId = 0;
 let jugando = false;
 let inicio = 0;
 let intervalo = null;
@@ -44,9 +47,9 @@ let records = cargarRecords();
 const hud = document.createElement('div');
 hud.className = 'blocka-hud is-hidden';
 hud.innerHTML = `
-    <span class="body" id="hudNivel"></span>
-    <span class="body" id="hudTiempo">00:00.0</span>
-    <span class="body" id="hudRecord"></span>
+    <span class="body blocka-text" id="hudNivel"></span>
+    <span class="body blocka-text" id="hudTiempo">00:00.0</span>
+    <span class="body blocka-text" id="hudRecord"></span>
     <button type="button" class="btn btn-tiny btn-primary" id="btnAyuda">Ayudita</button>
     <button type="button" class="btn btn-tiny btn-secondary" id="btnSalir">Menú</button>
 `;
@@ -55,9 +58,9 @@ stage.appendChild(hud);
 const fin = document.createElement('div');
 fin.className = 'blocka-fin is-hidden';
 fin.innerHTML = `
-    <h2 id="finTitulo"></h2>
-    <p class="body" id="finTiempo"></p>
-    <p class="body" id="finRecord"></p>
+    <h2 id="blocka-text finTitulo"></h2>
+    <p class="body blocka-text" id="finTiempo"></p>
+    <p class="body blocka-text" id="finRecord"></p>
     <div class="blocka-fin-botones">
         <button type="button" class="btn btn-medium btn-primary" id="btnSiguiente">Siguiente nivel</button>
         <button type="button" class="btn btn-medium btn-primary is-hidden" id="btnReintentar">Reintentar</button>
@@ -65,6 +68,29 @@ fin.innerHTML = `
     </div>
 `;
 stage.appendChild(fin);
+
+const intro = document.createElement('div');
+intro.className = 'blocka-intro is-hidden';
+IMAGENES.forEach(src => {
+    const t = document.createElement('img');
+    t.src = src;
+    t.alt = '';
+    t.className = 'blocka-thumb';
+    intro.appendChild(t);
+});
+stage.appendChild(intro);
+
+const config = document.createElement('div');
+config.className = 'blocka-config';
+config.innerHTML = `
+    <label class="small" for="cantPiezas">Piezas</label>
+    <select id="cantPiezas">
+        <option value="4">4</option>
+        <option value="6">6</option>
+        <option value="8">8</option>
+    </select>
+`;
+stage.appendChild(config);
 
 const hudNivel = document.getElementById('hudNivel');
 const hudTiempo = document.getElementById('hudTiempo');
@@ -77,6 +103,7 @@ const finRecord = document.getElementById('finRecord');
 const btnSiguiente = document.getElementById('btnSiguiente');
 const btnReintentar = document.getElementById('btnReintentar');
 const btnMenu = document.getElementById('btnMenu');
+const selPiezas = document.getElementById('cantPiezas');
 
 // ==========================================================
 // RÉCORDS
@@ -94,6 +121,10 @@ function guardarRecords() {
         localStorage.setItem('blocka-records', JSON.stringify(records));
     } catch (e) {
     }
+}
+
+function claveRecord() {
+    return piezas + '-' + nivelActual;
 }
 
 // ==========================================================
@@ -128,6 +159,16 @@ function detenerTemporizador() {
         clearInterval(intervalo);
         intervalo = null;
     }
+}
+
+// ==========================================================
+// CONFIGURACIÓN DE PIEZAS
+// ==========================================================
+function aplicarConfig(n) {
+    piezas = n;
+    [columnas, filas] = CONFIGS[n];
+    canvas.width = columnas * LADO;
+    canvas.height = filas * LADO;
 }
 
 // ==========================================================
@@ -177,21 +218,30 @@ function mostrarRuleta(indiceFinal, alTerminar) {
 }
 
 function prepararImagenes() {
-    const lado = Math.min(img.width, img.height);
-    const sx = (img.width - lado) / 2;
-    const sy = (img.height - lado) / 2;
+    const W = canvas.width;
+    const H = canvas.height;
+    const ratio = W / H;
+
+    let sw = img.width;
+    let sh = img.height;
+    if (sw / sh > ratio) sw = sh * ratio;
+    else sh = sw / ratio;
+    const sx = (img.width - sw) / 2;
+    const sy = (img.height - sh) / 2;
 
     original = document.createElement('canvas');
-    original.width = original.height = SIZE;
-    original.getContext('2d').drawImage(img, sx, sy, lado, lado, 0, 0, SIZE, SIZE);
+    original.width = W;
+    original.height = H;
+    original.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
 
     filtrada = document.createElement('canvas');
-    filtrada.width = filtrada.height = SIZE;
+    filtrada.width = W;
+    filtrada.height = H;
     const c = filtrada.getContext('2d');
     c.drawImage(original, 0, 0);
 
     try {
-        const datos = c.getImageData(0, 0, SIZE, SIZE);
+        const datos = c.getImageData(0, 0, W, H);
         aplicarFiltro(datos.data, NIVELES[nivelActual].filtro);
         c.putImageData(datos, 0, 0);
     } catch (e) {
@@ -228,9 +278,9 @@ function aplicarFiltro(d, tipo) {
 // ==========================================================
 function mezclar() {
     do {
-        rotaciones = [0, 1, 2, 3].map(() => 90 * Math.floor(Math.random() * 4));
+        rotaciones = Array.from({ length: piezas }, () => 90 * Math.floor(Math.random() * 4));
     } while (rotaciones.every(r => r === 0));   // que no arranque resuelto
-    fijas = [false, false, false, false];
+    fijas = new Array(piezas).fill(false);
 }
 
 function iniciarNivel() {
@@ -241,10 +291,11 @@ function iniciarNivel() {
     ayudasUsadas = 0;
     actualizarBotonAyuda();
 
+    const record = records[claveRecord()];
     hudNivel.textContent = 'Nivel ' + (nivelActual + 1);
     hudTiempo.textContent = textoTiempo(0);
-    hudRecord.textContent = records[nivelActual]
-        ? 'Récord: ' + formatear(records[nivelActual])
+    hudRecord.textContent = record
+        ? 'Récord: ' + formatear(record)
         : 'Sin récord';
 
     const indice = elegirIndice();
@@ -270,11 +321,12 @@ function ganar() {
     const tiempo = performance.now() - inicio;
     const limite = NIVELES[nivelActual].limite;
 
-    if (limite && tiempo > limite) { 
-        perder(); return;
+    if (limite && tiempo > limite) {
+        perder();
+        return;
     }
     jugando = false;
-    
+
     actualizarBotonAyuda();
     detenerTemporizador();
     hudTiempo.textContent = textoTiempo(tiempo);
@@ -282,10 +334,11 @@ function ganar() {
     fuente = original;
     dibujar();
 
-    const anterior = records[nivelActual];
+    const clave = claveRecord();
+    const anterior = records[clave];
     const esRecord = !anterior || tiempo < anterior;
     if (esRecord) {
-        records[nivelActual] = tiempo;
+        records[clave] = tiempo;
         guardarRecords();
         hudRecord.textContent = 'Récord: ' + formatear(tiempo);
     }
@@ -320,15 +373,17 @@ function perder() {
 }
 
 function volverAlMenu() {
-    nivelId++;             
+    nivelId++;
     jugando = false;
     detenerTemporizador();
 
     fin.classList.add('is-hidden');
+    intro.classList.add('is-hidden');
     hud.classList.add('is-hidden');
     canvas.classList.add('is-hidden');
     cover.classList.remove('is-hidden');
     btnPlay.classList.remove('is-hidden');
+    config.classList.remove('is-hidden');
     nivelActual = 0;
 }
 
@@ -346,7 +401,7 @@ function usarAyuda() {
     if (!jugando || ayudasUsadas >= AYUDAS_MAX) return;
 
     const candidatas = [];
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < piezas; i++) {
         if (!fijas[i] && rotaciones[i] !== 0) candidatas.push(i);
     }
     if (candidatas.length === 0) return;
@@ -355,7 +410,7 @@ function usarAyuda() {
     rotaciones[i] = 0;
     fijas[i] = true;
     ayudasUsadas++;
-    inicio -= PENALIZACION_AYUDA;  
+    inicio -= PENALIZACION_AYUDA;
     actualizarBotonAyuda();
     dibujar();
     if (estaResuelto()) ganar();
@@ -365,23 +420,22 @@ function usarAyuda() {
 // DIBUJO
 // ==========================================================
 function dibujar() {
-    ctx.clearRect(0, 0, SIZE, SIZE);
-    const s = SIZE / 2;   
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    for (let i = 0; i < 4; i++) {
-        const col = i % 2;
-        const fila = Math.floor(i / 2);
+    for (let i = 0; i < piezas; i++) {
+        const col = i % columnas;
+        const fila = Math.floor(i / columnas);
 
         ctx.save();
-        ctx.translate(col * HALF + HALF / 2, fila * HALF + HALF / 2);
+        ctx.translate(col * LADO + LADO / 2, fila * LADO + LADO / 2);
         ctx.rotate(rotaciones[i] * Math.PI / 180);
-        ctx.drawImage(fuente, col * s, fila * s, s, s, -HALF / 2, -HALF / 2, HALF, HALF);
+        ctx.drawImage(fuente, col * LADO, fila * LADO, LADO, LADO, -LADO / 2, -LADO / 2, LADO, LADO);
         ctx.restore();
 
         if (fijas[i] && jugando) {
             ctx.strokeStyle = '#27AE60';
             ctx.lineWidth = 6;
-            ctx.strokeRect(col * HALF + 3, fila * HALF + 3, HALF - 6, HALF - 6);
+            ctx.strokeRect(col * LADO + 3, fila * LADO + 3, LADO - 6, LADO - 6);
         }
     }
 }
@@ -391,8 +445,11 @@ function dibujar() {
 // ==========================================================
 
 btnPlay.addEventListener('click', () => {
+    aplicarConfig(Number(selPiezas.value));
+
     cover.classList.add('is-hidden');
     btnPlay.classList.add('is-hidden');
+    config.classList.add('is-hidden');
     canvas.classList.remove('is-hidden');
     hud.classList.remove('is-hidden');
 
@@ -402,16 +459,20 @@ btnPlay.addEventListener('click', () => {
 
 canvas.addEventListener('mousedown', e => {
     if (!jugando) return;
-    if (e.button !== 0 && e.button !== 2) return;   
+    if (e.button !== 0 && e.button !== 2) return;
 
     const r = canvas.getBoundingClientRect();
-    const x = (e.clientX - r.left) * (SIZE / r.width);
-    const y = (e.clientY - r.top) * (SIZE / r.height);
-    const i = Math.floor(y / HALF) * 2 + Math.floor(x / HALF);
+    const x = (e.clientX - r.left) * (canvas.width / r.width);
+    const y = (e.clientY - r.top) * (canvas.height / r.height);
+    const col = Math.floor(x / LADO);
+    const fila = Math.floor(y / LADO);
 
-    if (i < 0 || i > 3 || fijas[i]) return;
+    if (col < 0 || col >= columnas || fila < 0 || fila >= filas) return;
 
-    const giro = (e.button === 2) ? 90 : -90;   
+    const i = fila * columnas + col;
+    if (fijas[i]) return;
+
+    const giro = (e.button === 2) ? 90 : -90;
     rotaciones[i] = (rotaciones[i] + giro + 360) % 360;
     dibujar();
 
