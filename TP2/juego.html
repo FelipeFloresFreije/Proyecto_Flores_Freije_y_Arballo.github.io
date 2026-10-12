@@ -225,7 +225,6 @@
 
         </section>
 
-        <!-- CÓMO JUGAR + ACERCA DEL JUEGO -->
         <section class="info-grid">
 
             <article class="info-card">
@@ -482,24 +481,22 @@
 
         </section>
 
-    <!-- FOOTER -->
-    <footer>
+        <footer>
 
-        <div class="footer-container">
+            <div class="footer-container">
 
-            <div class="footer-left">
+            <!-- IZQUIERDA: marca -->
+            <div class="footer-brand">
 
                 <div class="footer-logo">
                     <img src="assets/img/logo-batman.svg" alt="Logo Minijuegos" class="logo">
                     <h2>Minijuegos</h2>
                 </div>
 
-                <div class="footer-legal">
-                    <p class="body">© Minijuegos.</p>
-                    <p class="body">Todos los derechos reservados.</p>
-                    <p class="body">Todas las marcas registradas pertenecen a sus respectivos dueños en EE. UU. y otros países.</p>
-                    <p class="body">Todos los precios incluyen IVA (donde sea aplicable).</p>
-                </div>
+                <p class="small footer-tagline">
+                    Los mejores juegos temáticos de DC, directo en tu navegador.
+                    Jugá, guardá tus favoritos y subí de nivel.
+                </p>
 
                 <div class="footer-social">
                     <a href="#" aria-label="TikTok"><img src="assets/icons/tiktok.svg" alt="" class="icons"></a>
@@ -512,63 +509,73 @@
 
             </div>
 
-            <div class="footer-right">
+            <!-- CENTRO: links -->
+            <nav class="footer-columns" aria-label="Enlaces del sitio">
 
-                <nav class="footer-columns" aria-label="Enlaces del sitio">
+                <div class="footer-col">
+                    <h3 class="body">JUEGOS</h3>
+                    <ul>
+                        <li><a class="small" href="#">Librería de juegos</a></li>
+                        <li><a class="small" href="#">Rankings</a></li>
+                        <li><a class="small" href="#">Populares</a></li>
+                        <li><a class="small" href="#">Favoritos</a></li>
+                    </ul>
+                </div>
 
-                    <div class="footer-col">
-                        <h3 class="body">JUEGOS</h3>
-                        <ul>
-                            <li><a class="small" href="index.html">Librería de juegos</a></li>
-                            <li><a class="small" href="index.html">Rankings</a></li>
-                            <li><a class="small" href="index.html">Populares</a></li>
-                            <li><a class="small" href="index.html">Favoritos</a></li>
-                        </ul>
-                    </div>
+                <div class="footer-col">
+                    <h3 class="body">CATEGORÍAS</h3>
+                    <ul>
+                        <li><a class="small" href="#">Acción</a></li>
+                        <li><a class="small" href="#">Puzzle</a></li>
+                        <li><a class="small" href="#">Aventura</a></li>
+                        <li><a class="small" href="#">Estrategia</a></li>
+                        <li><a class="small" href="#">Deportes</a></li>
+                        <li><a class="small" href="#">Carreras</a></li>
+                    </ul>
+                </div>
 
-                    <div class="footer-col">
-                        <h3 class="body">CATEGORÍAS</h3>
-                        <ul>
-                            <li><a class="small" href="index.html">Acción</a></li>
-                            <li><a class="small" href="index.html">Puzzle</a></li>
-                            <li><a class="small" href="index.html">Aventura</a></li>
-                            <li><a class="small" href="index.html">Estrategia</a></li>
-                            <li><a class="small" href="index.html">Deportes</a></li>
-                            <li><a class="small" href="index.html">Carreras</a></li>
-                        </ul>
-                    </div>
+                <div class="footer-col">
+                    <h3 class="body">AYUDA</h3>
+                    <ul>
+                        <li><a class="small" href="#">FAQ</a></li>
+                        <li><a class="small" href="#">Soporte</a></li>
+                        <li><a class="small" href="#">Contacto</a></li>
+                    </ul>
+                </div>
 
-                    <div class="footer-col">
-                        <h3 class="body">AYUDA</h3>
-                        <ul>
-                            <li><a class="small" href="#">FAQ</a></li>
-                            <li><a class="small" href="#">Soporte</a></li>
-                            <li><a class="small" href="#">Contacto</a></li>
-                        </ul>
-                    </div>
+                <div class="footer-col">
+                    <h3 class="body">COMUNIDAD</h3>
+                    <ul>
+                        <li><a class="small" href="#">Eventos</a></li>
+                        <li><a class="small" href="#">Foros</a></li>
+                        <li><a class="small" href="#">Redes</a></li>
+                    </ul>
+                </div>
 
-                    <div class="footer-col">
-                        <h3 class="body">COMUNIDAD</h3>
-                        <ul>
-                            <li><a class="small" href="#">Eventos</a></li>
-                            <li><a class="small" href="#">Foros</a></li>
-                            <li><a class="small" href="#">Redes</a></li>
-                        </ul>
-                    </div>
+            </nav>
 
-                    <div class="footer-col">
-                        <h3 class="body">LEGAL</h3>
-                        <ul>
-                            <li><a class="small" href="#">Nosotros</a></li>
-                            <li><a class="small" href="#">Términos y condiciones</a></li>
-                            <li><a class="small" href="#">Privacidad</a></li>
-                        </ul>
-                    </div>
+            <!-- DERECHA: novedades -->
+            <form class="footer-form" id="footerForm">
+                <h3 class="body">NOVEDADES</h3>
+                <p class="small">Enterate de nuevos juegos y eventos.</p>
+                <label for="footerEmail" class="small">Tu correo</label>
+                <input type="email" id="footerEmail" placeholder="nombre@correo.com">
+                <button type="submit" class="btn btn-medium btn-primary">Suscribirme</button>
+            </form>
 
-                </nav>
+        </div>
 
+        <!-- BARRA INFERIOR -->
+        <div class="footer-bottom">
+            <div class="footer-bottom-text">
+                <p class="small">© Minijuegos. Todos los derechos reservados.</p>
+                <p class="small">Todas las marcas registradas pertenecen a sus respectivos dueños en EE. UU. y otros países. Todos los precios incluyen IVA (donde sea aplicable).</p>
             </div>
-
+            <ul class="footer-bottom-links">
+                <li><a class="small" href="#">Nosotros</a></li>
+                <li><a class="small" href="#">Términos y condiciones</a></li>
+                <li><a class="small" href="#">Privacidad</a></li>
+            </ul>
         </div>
 
     </footer>
