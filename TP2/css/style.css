@@ -2089,12 +2089,45 @@ footer {
     color: var(--neutral-light);
 }
 
+.blocka-hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background-color: rgba(12, 68, 124, 0.85);
+}
+
+.blocka-fin {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(12, 68, 124, 0.9);
+    text-align: center;
+}
+
+.blocka-fin-botones {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
 .blocka-intro {
     position: absolute;
     inset: 0;
     z-index: 4;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     align-content: center;
     gap: 12px;
     padding: 16px;
