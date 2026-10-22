@@ -4,7 +4,8 @@ function iniciarBlocka() {
     const cover = document.getElementById('stageCover');
     const btnPlay = document.getElementById('btnPlay');
     const stage = document.getElementById('gameStage');
-
+    //aplicar filtro de opacidad
+    // tamanio del blocka y no produsca un overflow de la pantalla
     const LADO = 400;
     const CONFIGS = { 4: [2, 2], 6: [3, 2], 8: [4, 2] };
 
@@ -13,10 +14,14 @@ function iniciarBlocka() {
         'img5.jpg', 'img6.jpg', 'img7.jpg', 'img8.jpg'
     ].map(nombre => 'assets/img/blocka/' + nombre);
 
+    const FILTROS = ['negativo', 'brillo', 'grises', 'opacidad'];
+
     const NIVELES = [
         { nombre: 'Escala de grises', filtro: 'grises', limite: null },
-        { nombre: 'Brillo', filtro: 'brillo', limite: 120000 },
-        { nombre: 'Negativo', filtro: 'negativo', limite: 90000 }
+        { nombre: 'Brillo', filtro: 'brillo', limite: 120000},
+        { nombre: 'Opacidad', filtro: 'opacidad', limite: 900000},
+        { nombre: 'Negativo', filtro: 'negativo', limite: 60000},
+        { nombre: 'Todos', filtro: FILTROS, limite: 30000}
     ];
 
     const PENALIZACION_AYUDA = 5000;
@@ -133,11 +138,19 @@ function iniciarBlocka() {
     }
 
     function textoTiempo(ms) {
+
         const limite = NIVELES[nivelActual].limite;
+        if(!limite){
+            return formatear(ms);
+        }
+        return formatear(Math.max(0, limite - ms));
+
+        /* const limite = NIVELES[nivelActual].limite;
 
         return limite
             ? formatear(ms) + ' / ' + formatear(limite)
             : formatear(ms);
+            */
     }
 
     function iniciarTemporizador() {
@@ -146,10 +159,11 @@ function iniciarBlocka() {
 
         intervalo = setInterval(() => {
             const t = performance.now() - inicio;
-
             hudTiempo.textContent = textoTiempo(t);
 
             const limite = NIVELES[nivelActual].limite;
+
+            hudTiempo.classList.toggle('blocka-urgente', !!limite && limite - t <= 15000);
 
             if (limite && t >= limite) {
                 perder();
@@ -162,6 +176,7 @@ function iniciarBlocka() {
             clearInterval(intervalo);
             intervalo = null;
         }
+        hudTiempo.classList.remove('blocka-urgente');
     }
 
     function aplicarConfig(n) {
@@ -263,19 +278,30 @@ function iniciarBlocka() {
         const c = filtrada.getContext('2d');
         c.drawImage(original, 0, 0);
 
+        
+            
         try {
-            const datos = c.getImageData(0, 0, W, H);
+            const filtros = [].concat(NIVELES[nivelActual].filtro);
 
-            aplicarFiltro(datos.data, NIVELES[nivelActual].filtro);
+            if (filtros.length > 1) {
+                // un filtro distinto por pieza (se repiten en ciclo)
+                for (let i = 0; i < piezas; i++) {
+                    const col = i % columnas;
+                    const fila = Math.floor(i / columnas);
 
-            c.putImageData(datos, 0, 0);
+                    const datos = c.getImageData(col * LADO, fila * LADO, LADO, LADO);
+                    aplicarFiltro(datos.data, filtros[i % filtros.length]);
+                    c.putImageData(datos, col * LADO, fila * LADO);
+                }
+            } else {
+                // un solo filtro para toda la imagen
+                const datos = c.getImageData(0, 0, W, H);
+                aplicarFiltro(datos.data, filtros[0]);
+                c.putImageData(datos, 0, 0);
+            }
         } catch (e) {
-            console.error(
-                'No se pudo aplicar el filtro (¿estás en file://?):',
-                e
-            );
+            console.error('No se pudo aplicar el filtro:', e);
         }
-
         fuente = filtrada;
     }
 
@@ -299,6 +325,8 @@ function iniciarBlocka() {
                 d[p] = 255 - r;
                 d[p + 1] = 255 - g;
                 d[p + 2] = 255 - b;
+            } else if (tipo == 'opacidad'){
+                d[p + 3] = 255 * 0.5;
             }
         }
     }

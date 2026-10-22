@@ -1679,7 +1679,6 @@ footer {
 
 /* ----- REPRODUCTOR ----- */
 
-.game-player,
 .info-grid,
 .gallery,
 .community {
@@ -1689,6 +1688,10 @@ footer {
 }
 
 .game-player {
+    width: 100%;
+    max-width: 960px;      
+    margin: 0 auto;        
+    box-sizing: border-box;
     overflow: hidden;
     border-radius: var(--surface-radius);
 }
@@ -2165,6 +2168,14 @@ footer {
     padding: 6px 10px;
     border-radius: 6px;
     background-color: rgba(255, 255, 255, 0.9);
+}
+
+.blocka-urgente {
+    color:var(--error-default);
+    font-family: 'Nunito', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 24px;
 }
 
 .is-hidden {
