@@ -1,3 +1,6 @@
+//las que no pueden hacer ningun movimiento pueden tener un efecto
+//modo ayuda
+
 /* ==========================================================
    PEG SOLITAIRE
    ========================================================== */
