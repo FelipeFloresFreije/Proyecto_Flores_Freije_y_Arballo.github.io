@@ -42,24 +42,36 @@ let animando = false;
 
 // ----- IMÁGENES -----
 const imgFondo = new Image();  
-const imgFicha = new Image();   
 imgFondo.src = 'assets/img/peg/tablero.jpg';
-imgFicha.src = 'assets/img/peg/ficha.svg';
+
+const imgsFicha = [new Image(), new Image()];
+
+imgsFicha[0].src = 'assets/img/peg/ficha1.svg';
+imgsFicha[1].src = 'assets/img/peg/ficha2.svg'; 
+
+// ----- HUD, TIMER Y FIN -----
+const TIEMPO_LIMITE = 300;
+const pegHud = document.getElementById('pegHud');
+const pegTiempo = document.getElementById('pegTiempo');
+const pegFichas = document.getElementById('pegFichas');
+const pegFin = document.getElementById('pegFin');
+const pegFinTexto = document.getElementById('pegFinTexto');
+const pegFinTitulo = document.getElementById('pegFinTitulo');
+let tiempoRestante = TIEMPO_LIMITE;
+let intervaloTimer = null;
 
 /**
  * Espera a que todas las imágenes estén cargadas y luego ejecuta el callback.
- * Si una imagen ya estaba cargada, no espera su evento onload.
+ * Si alguna falla, informa en consola cuál es la ruta que no se pudo cargar.
  * @param {HTMLImageElement[]} lista - imágenes a esperar
  * @param {Function} callback - función a ejecutar cuando todas estén listas
  */
 function cargarImagenes(lista, callback) {
     let pendientes = lista.length;
     lista.forEach(img => {
-        if (img.complete && img.naturalWidth > 0) {
-            if (--pendientes === 0) callback();
-        } else {
-            img.onload = () => { if (--pendientes === 0) callback(); };
-        }
+        img.decode()
+            .then(() => { if (--pendientes === 0) callback(); })
+            .catch(() => console.error('No se pudo cargar la imagen: ' + img.src));
     });
 }
 
@@ -127,7 +139,7 @@ function crearFichas() {
     for (let f = 0; f < FILAS; f++) {
         for (let c = 0; c < COLUMNAS; c++) {
             if (tableroInicial[f][c] == 1) {
-                fichas.push(new Ficha(f, c, imgFicha));
+                fichas.push(new Ficha(f, c, imgsFicha[Math.floor(Math.random() * imgsFicha.length)]));
             }
         }
     }
@@ -170,6 +182,9 @@ function iniciarJuego() {
     fichaActiva = null;
     destinos = [];
     crearFichas();
+    pegFin.classList.add('is-hidden');   
+    pegHud.classList.remove('is-hidden'); 
+    iniciarTimer();
     if (!animando) {
         animando = true;
         requestAnimationFrame(animar);
@@ -249,7 +264,7 @@ function aplicarMovimiento(ficha, destino) {
 /** Verifica después de cada movimiento si el juego terminó (sin movimientos posibles). */
 function verificarFin() {
     if (!hayMovimientos()) {
-        juegoTerminado = true;
+        terminarJuego(fichas.length === 1 ? 'victoria' : 'sinMovimientos');
     }
 }
 
@@ -270,7 +285,7 @@ function dibujarHints(tiempo) {
         ctx.beginPath();
         ctx.arc(x, y, RADIO_FICHA + pulso, 0, Math.PI * 2);
         ctx.lineWidth = 4;
-        ctx.strokeStyle = '#67E8F9';
+        ctx.strokeStyle = '#0891B2';
         ctx.stroke();
 
         // Flecha que baja y sube sobre el destino
@@ -280,7 +295,7 @@ function dibujarHints(tiempo) {
         ctx.lineTo(x + 10, yf - 10);
         ctx.lineTo(x, yf + 6);
         ctx.closePath();
-        ctx.fillStyle = '#67E8F9';
+        ctx.fillStyle = '#0891B2';
         ctx.fill();
     }
 }
@@ -294,7 +309,7 @@ btnPlay.addEventListener('click', () => {
     stageCover.classList.add('is-hidden');
     btnPlay.classList.add('is-hidden');
     canvas.classList.remove('is-hidden');
-    cargarImagenes([imgFondo, imgFicha], iniciarJuego);
+    cargarImagenes([imgFondo, ...imgsFicha], iniciarJuego);
 });
 
 /**
@@ -366,6 +381,7 @@ canvas.addEventListener('mouseup', (e) => {
 
     if (destino) {
         aplicarMovimiento(fichaActiva, destino);
+        actualizarHud();
         verificarFin();
     } else {
         // Movimiento inválido: la ficha vuelve a su casilla original
@@ -384,3 +400,56 @@ canvas.addEventListener('mouseleave', () => {
     fichaActiva = null;
     destinos = [];
 });
+
+function actualizarHud(){
+    const mm = String(Math.floor(tiempoRestante / 60)).padStart(2, '0');
+    const ss = String(tiempoRestante % 60).padStart(2, '0');
+
+    pegTiempo.textContent = 'Tiempo: ' + mm + ':' + ss;
+    pegTiempo.classList.toggle('blocka-urgente', tiempoRestante <= 30);
+    pegFichas.textContent = 'Fichas: ' + fichas.length; 
+}
+
+function detenerTimer(){
+    clearInterval(intervaloTimer);
+}
+
+function iniciarTimer(){
+    detenerTimer();
+    tiempoRestante = TIEMPO_LIMITE;
+    actualizarHud();
+    intervaloTimer = setInterval(() => {
+        tiempoRestante--;
+        actualizarHud();
+        if(tiempoRestante <= 0){
+            terminarJuego('tiempo');
+        }
+    }, 1000);
+}
+
+/**
+ * Finaliza la partida y muestra el cartel correspondiente.
+ * @param {string} motivo - 'victoria', 'sinMovimientos' o 'tiempo'
+ */
+
+function terminarJuego(motivo) {
+    juegoTerminado = true;
+    detenerTimer();
+    fichaActiva = null;
+    destinos = [];
+
+    if (motivo === 'victoria') {
+        pegFinTitulo.textContent = '¡Ganaste!';
+        pegFinTexto.textContent = 'Dejaste una sola ficha en el tablero.';
+    } else if (motivo === 'tiempo') {
+        pegFinTitulo.textContent = 'Se acabó el tiempo';
+        pegFinTexto.textContent = 'Te quedaron ' + fichas.length + ' fichas.';
+    } else {
+        pegFinTitulo.textContent = 'Sin movimientos';
+        pegFinTexto.textContent = 'Te quedaron ' + fichas.length + ' fichas.';
+    }
+    pegFin.classList.remove('is-hidden');
+}
+
+document.getElementById('btnReiniciar').addEventListener('click', iniciarJuego);
+document.getElementById('btnJugarOtraVez').addEventListener('click', iniciarJuego);
