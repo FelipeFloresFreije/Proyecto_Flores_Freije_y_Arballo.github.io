@@ -1,21 +1,18 @@
-//las que no pueden hacer ningun movimiento pueden tener un efecto
-//modo ayuda
-
 /* ==========================================================
    PEG SOLITAIRE
    ========================================================== */
 
 // ----- ELEMENTOS DEL DOM -----
-const canvas = document.getElementById('pegCanvas');     
-const ctx = canvas.getContext('2d');                     
-const btnPlay = document.getElementById('btnPlay');       
-const stageCover = document.getElementById('stageCover');  
+const canvas = document.getElementById('pegCanvas');
+const ctx = canvas.getContext('2d');
+const btnPlay = document.getElementById('btnPlay');
+const stageCover = document.getElementById('stageCover');
 
 // ----- CONSTANTES DEL TABLERO -----
-const FILAS = 7;                          
-const COLUMNAS = 7;                        
-const TAM_CELDA = canvas.width / COLUMNAS;  
-const RADIO_FICHA = TAM_CELDA * 0.38;      
+const FILAS = 7;
+const COLUMNAS = 7;
+const TAM_CELDA = canvas.width / COLUMNAS;
+const RADIO_FICHA = TAM_CELDA * 0.38;
 
 // Tablero inicial: -1 = fuera del tablero, 0 = casilla vacía, 1 = casilla con ficha
 const tableroInicial = [
@@ -32,25 +29,27 @@ const tableroInicial = [
 const DIRECCIONES = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
 // ----- ESTADO DEL JUEGO -----
-let fichas = [];        
-let tablero = [];      
+let fichas = [];
+let tablero = [];
 
 // ----- ESTADO DEL DRAG AND DROP -----
-let fichaActiva = null;  
-let destinos = [];          
-let offsetX = 0;        
-let offsetY = 0;           
-let juegoTerminado = false; 
-let animando = false;       
+let fichaActiva = null;
+let destinos = [];
+let offsetX = 0;
+let offsetY = 0;
+let juegoTerminado = false;
+let animando = false;
+let modoAyuda = false;
 
 // ----- IMÁGENES -----
-const imgFondo = new Image();  
+const imgFondo = new Image();
 imgFondo.src = 'assets/img/peg/tablero.jpg';
 
-const imgsFicha = [new Image(), new Image()];
+const imgsFicha = [new Image(), new Image(), new Image()];
 
 imgsFicha[0].src = 'assets/img/peg/ficha1.svg';
-imgsFicha[1].src = 'assets/img/peg/ficha2.svg'; 
+imgsFicha[1].src = 'assets/img/peg/ficha2.svg';
+imgsFicha[2].src = 'assets/img/peg/ficha3.svg';
 
 // ----- HUD, TIMER Y FIN -----
 const TIEMPO_LIMITE = 300;
@@ -60,6 +59,7 @@ const pegFichas = document.getElementById('pegFichas');
 const pegFin = document.getElementById('pegFin');
 const pegFinTexto = document.getElementById('pegFinTexto');
 const pegFinTitulo = document.getElementById('pegFinTitulo');
+const btnAyuda = document.getElementById('btnAyuda');
 let tiempoRestante = TIEMPO_LIMITE;
 let intervaloTimer = null;
 
@@ -95,15 +95,38 @@ class Ficha {
         this.radio = RADIO_FICHA;
         this.x = col * TAM_CELDA + TAM_CELDA / 2;
         this.y = fila * TAM_CELDA + TAM_CELDA / 2;
+        this.bloqueada = false;    // true si no tiene ningún salto posible
+        this.sacudidaInicio = 0;   // momento en que empezó la sacudida (0 = sin sacudida)
     }
 
-    /** Dibuja la ficha con su imagen recortada en forma de círculo. */
-    dibujar() {
+    /**
+     * Dibuja la ficha recortada en círculo. Si está bloqueada se ve opaca,
+     * y si se intentó agarrar, se sacude horizontalmente unos 300 ms.
+     * @param {number} tiempo - timestamp del frame (para animar la sacudida)
+     */
+    dibujar(tiempo = 0) {
+        let dx = 0;
+
+        if (this.sacudidaInicio) {
+            const t = tiempo - this.sacudidaInicio;
+
+            if (t < 300) {
+                dx = Math.sin(t / 25) * 4;
+            } else {
+                this.sacudidaInicio = 0;
+            }
+        }
+
         ctx.save();
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radio, 0, Math.PI * 2);
+        ctx.arc(this.x + dx, this.y, this.radio, 0, Math.PI * 2);
         ctx.clip(); // todo lo que se dibuje después queda limitado al círculo
-        ctx.drawImage(this.img, this.x - this.radio, this.y - this.radio,
+
+        if (this.bloqueada && modoAyuda) {
+            ctx.globalAlpha = 0.4;
+        }
+
+        ctx.drawImage(this.img, this.x + dx - this.radio, this.y - this.radio,
                       this.radio * 2, this.radio * 2);
         ctx.restore();
     }
@@ -154,20 +177,29 @@ function dibujarFondo() {
 }
 
 /**
- * Redibuja toda la escena en orden: fondo, fichas, hints y,
- * arriba de todo, la ficha que se está arrastrando.
- * @param {number} tiempo - tiempo en ms (lo usan los hints para animarse)
+ * Redibuja toda la escena en orden: fondo, fichas, hints, la ficha que se
+ * está arrastrando y, si está activo, el modo ayuda.
+ * @param {number} tiempo - tiempo en ms (lo usan las animaciones)
  */
 function dibujarTodo(tiempo = 0) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     dibujarFondo();
-    fichas.forEach(f => { if (f !== fichaActiva) f.dibujar(); });
+
+    fichas.forEach(f => {
+        if (f !== fichaActiva) {
+            f.dibujar(tiempo);
+        }
+    });
+
     dibujarHints(tiempo);
-    if (fichaActiva) fichaActiva.dibujar();
+
+    if (fichaActiva) {
+        fichaActiva.dibujar(tiempo);
+    }
 }
 
 /**
- * Loop de animación: redibuja en cada frame para que los hints se muevan.
+ * Loop de animación: redibuja en cada frame para que los efectos se muevan.
  * @param {number} tiempo - timestamp que entrega requestAnimationFrame
  */
 function animar(tiempo) {
@@ -177,17 +209,25 @@ function animar(tiempo) {
 
 /**
  * Inicia (o reinicia) la partida: copia el tablero inicial,
- * resetea el estado, crea las fichas y arranca el loop de animación una sola vez.
+ * resetea el estado, crea las fichas, marca las bloqueadas
+ * y arranca el loop de animación una sola vez.
  */
 function iniciarJuego() {
     tablero = tableroInicial.map(fila => fila.slice()); // copia, no referencia
+
     juegoTerminado = false;
     fichaActiva = null;
     destinos = [];
+
     crearFichas();
-    pegFin.classList.add('is-hidden');   
-    pegHud.classList.remove('is-hidden'); 
+    actualizarBloqueadas();
+
+    pegFin.classList.add('is-hidden');
+    pegHud.classList.remove('is-hidden');
+
+    actualizarHud();
     iniciarTimer();
+
     if (!animando) {
         animando = true;
         requestAnimationFrame(animar);
@@ -218,16 +258,20 @@ function dentroDelTablero(fila, col) {
  */
 function calcularDestinos(fila, col) {
     const lista = [];
+
     for (const [df, dc] of DIRECCIONES) {
-        const medioF = fila + df, medioC = col + dc;    
-        const destF = fila + 2 * df, destC = col + 2 * dc;
-        if (dentroDelTablero(destF, destC) &&
-            tablero[medioF][medioC] === 1 &&
-            tablero[destF][destC] === 0) {
-            lista.push({ fila: destF, col: destC,
-                         saltadaFila: medioF, saltadaCol: medioC });
+        const medioF = fila + df;
+        const medioC = col + dc;
+
+        const destF = fila + 2 * df;
+        const destC = col + 2 * dc;
+
+        if (dentroDelTablero(medioF, medioC) && dentroDelTablero(destF, destC) &&
+            tablero[medioF][medioC] === 1 && tablero[destF][destC] === 0) {
+            lista.push({ fila: destF, col: destC, saltadaFila: medioF, saltadaCol: medioC });
         }
     }
+
     return lista;
 }
 
@@ -246,6 +290,13 @@ function hayMovimientos() {
     return false;
 }
 
+/** Marca cada ficha como bloqueada o no, según si tiene saltos posibles. */
+function actualizarBloqueadas() {
+    fichas.forEach(f => {
+        f.bloqueada = calcularDestinos(f.fila, f.col).length === 0;
+    });
+}
+
 /**
  * Ejecuta un salto: actualiza la matriz, elimina la ficha saltada
  * y mueve la ficha activa a su nueva casilla.
@@ -253,11 +304,10 @@ function hayMovimientos() {
  * @param {Object} destino - destino elegido (viene de calcularDestinos)
  */
 function aplicarMovimiento(ficha, destino) {
-    tablero[ficha.fila][ficha.col] = 0;                        
-    tablero[destino.saltadaFila][destino.saltadaCol] = 0;         
-    tablero[destino.fila][destino.col] = 1;                     
+    tablero[ficha.fila][ficha.col] = 0;
+    tablero[destino.saltadaFila][destino.saltadaCol] = 0;
+    tablero[destino.fila][destino.col] = 1;
 
-    // Quita del arreglo de fichas la que fue saltada
     fichas = fichas.filter(f =>
         !(f.fila === destino.saltadaFila && f.col === destino.saltadaCol));
 
@@ -282,9 +332,8 @@ function dibujarHints(tiempo) {
         const x = d.col * TAM_CELDA + TAM_CELDA / 2;
         const y = d.fila * TAM_CELDA + TAM_CELDA / 2;
         const pulso = Math.sin(tiempo / 200) * 5;
-        const rebote = Math.sin(tiempo / 150) * 6; 
+        const rebote = Math.sin(tiempo / 150) * 6;
 
-        // Círculo pulsante
         ctx.beginPath();
         ctx.arc(x, y, RADIO_FICHA + pulso, 0, Math.PI * 2);
         ctx.lineWidth = 4;
@@ -301,6 +350,68 @@ function dibujarHints(tiempo) {
         ctx.fillStyle = '#0891B2';
         ctx.fill();
     }
+}
+
+/* ==========================================================
+   HUD, TIMER Y FIN DE PARTIDA
+   ========================================================== */
+
+/** Actualiza el tiempo restante y la cantidad de fichas que se muestran en pantalla. */
+function actualizarHud() {
+    const mm = String(Math.floor(tiempoRestante / 60)).padStart(2, '0');
+    const ss = String(tiempoRestante % 60).padStart(2, '0');
+
+    pegTiempo.textContent = 'Tiempo: ' + mm + ':' + ss;
+    pegTiempo.classList.toggle('blocka-urgente', tiempoRestante <= 30);
+    pegFichas.textContent = 'Fichas: ' + fichas.length;
+}
+
+/** Detiene el temporizador del juego. */
+function detenerTimer() {
+    clearInterval(intervaloTimer);
+}
+
+/** Inicia el temporizador y termina la partida cuando se acaba el tiempo límite. */
+function iniciarTimer() {
+    detenerTimer();
+    tiempoRestante = TIEMPO_LIMITE;
+    actualizarHud();
+    intervaloTimer = setInterval(() => {
+        tiempoRestante--;
+        actualizarHud();
+        if (tiempoRestante <= 0) {
+            terminarJuego('tiempo');
+        }
+    }, 1000);
+}
+
+/**
+ * Finaliza la partida y muestra el cartel correspondiente.
+ * Si había una ficha agarrada, la devuelve a su casilla.
+ * @param {string} motivo - 'victoria', 'sinMovimientos' o 'tiempo'
+ */
+function terminarJuego(motivo) {
+    juegoTerminado = true;
+    detenerTimer();
+
+    // Si el tiempo se acaba mientras se arrastra, la ficha vuelve a su lugar
+    if (fichaActiva) {
+        fichaActiva.colocarEn(fichaActiva.fila, fichaActiva.col);
+    }
+    fichaActiva = null;
+    destinos = [];
+
+    if (motivo === 'victoria') {
+        pegFinTitulo.textContent = '¡Ganaste!';
+        pegFinTexto.textContent = 'Dejaste una sola ficha en el tablero.';
+    } else if (motivo === 'tiempo') {
+        pegFinTitulo.textContent = 'Se acabó el tiempo';
+        pegFinTexto.textContent = 'Te quedaron ' + fichas.length + ' fichas.';
+    } else {
+        pegFinTitulo.textContent = 'Sin movimientos';
+        pegFinTexto.textContent = 'Te quedaron ' + fichas.length + ' fichas.';
+    }
+    pegFin.classList.remove('is-hidden');
 }
 
 /* ==========================================================
@@ -329,7 +440,7 @@ function posMouse(e) {
     };
 }
 
-// MouseDown: busca la ficha clickeada y calcula sus destinos válidos
+// busca la ficha clickeada y calcula sus destinos válidos
 canvas.addEventListener('mousedown', (e) => {
     if (juegoTerminado) {
         return;
@@ -347,7 +458,8 @@ canvas.addEventListener('mousedown', (e) => {
     const posibles = calcularDestinos(f.fila, f.col);
 
     if (posibles.length === 0) {
-        return; // ficha sin movimientos: no se puede agarrar
+        f.sacudidaInicio = performance.now(); // ficha bloqueada: se sacude
+        return;
     }
 
     fichaActiva = f;
@@ -357,7 +469,7 @@ canvas.addEventListener('mousedown', (e) => {
     offsetY = y - f.y;
 });
 
-// MouseMove: la ficha activa sigue al mouse
+// la ficha activa sigue al mouse
 canvas.addEventListener('mousemove', (e) => {
     if (!fichaActiva) {
         return;
@@ -368,7 +480,7 @@ canvas.addEventListener('mousemove', (e) => {
     fichaActiva.y = y - offsetY;
 });
 
-// MouseUp: si se suelta sobre un destino válido se hace el salto; si no, la ficha vuelve
+// si se suelta sobre un destino válido se hace el salto; si no, la ficha vuelve
 canvas.addEventListener('mouseup', (e) => {
     if (!fichaActiva) {
         return;
@@ -384,6 +496,7 @@ canvas.addEventListener('mouseup', (e) => {
 
     if (destino) {
         aplicarMovimiento(fichaActiva, destino);
+        actualizarBloqueadas(); // el tablero cambió: recalcula qué fichas quedaron bloqueadas
         actualizarHud();
         verificarFin();
     } else {
@@ -394,7 +507,7 @@ canvas.addEventListener('mouseup', (e) => {
     destinos = [];
 });
 
-// MouseLeave: si el mouse sale del canvas con una ficha agarrada, la devuelve a su lugar
+// si el mouse sale del canvas con una ficha agarrada, la devuelve a su lugar
 canvas.addEventListener('mouseleave', () => {
     if (!fichaActiva) {
         return;
@@ -404,55 +517,12 @@ canvas.addEventListener('mouseleave', () => {
     destinos = [];
 });
 
-function actualizarHud(){
-    const mm = String(Math.floor(tiempoRestante / 60)).padStart(2, '0');
-    const ss = String(tiempoRestante % 60).padStart(2, '0');
+// activa o desactiva el modo ayuda
+btnAyuda.addEventListener('click', () => {
+    modoAyuda = !modoAyuda;
+    btnAyuda.textContent = 'Ayuda: ' + (modoAyuda ? 'ON' : 'OFF');
+});
 
-    pegTiempo.textContent = 'Tiempo: ' + mm + ':' + ss;
-    pegTiempo.classList.toggle('blocka-urgente', tiempoRestante <= 30);
-    pegFichas.textContent = 'Fichas: ' + fichas.length; 
-}
-
-function detenerTimer(){
-    clearInterval(intervaloTimer);
-}
-
-function iniciarTimer(){
-    detenerTimer();
-    tiempoRestante = TIEMPO_LIMITE;
-    actualizarHud();
-    intervaloTimer = setInterval(() => {
-        tiempoRestante--;
-        actualizarHud();
-        if(tiempoRestante <= 0){
-            terminarJuego('tiempo');
-        }
-    }, 1000);
-}
-
-/**
- * Finaliza la partida y muestra el cartel correspondiente.
- * @param {string} motivo - 'victoria', 'sinMovimientos' o 'tiempo'
- */
-
-function terminarJuego(motivo) {
-    juegoTerminado = true;
-    detenerTimer();
-    fichaActiva = null;
-    destinos = [];
-
-    if (motivo === 'victoria') {
-        pegFinTitulo.textContent = '¡Ganaste!';
-        pegFinTexto.textContent = 'Dejaste una sola ficha en el tablero.';
-    } else if (motivo === 'tiempo') {
-        pegFinTitulo.textContent = 'Se acabó el tiempo';
-        pegFinTexto.textContent = 'Te quedaron ' + fichas.length + ' fichas.';
-    } else {
-        pegFinTitulo.textContent = 'Sin movimientos';
-        pegFinTexto.textContent = 'Te quedaron ' + fichas.length + ' fichas.';
-    }
-    pegFin.classList.remove('is-hidden');
-}
-
+// Botones de reinicio
 document.getElementById('btnReiniciar').addEventListener('click', iniciarJuego);
 document.getElementById('btnJugarOtraVez').addEventListener('click', iniciarJuego);
