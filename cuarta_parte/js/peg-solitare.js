@@ -2,6 +2,11 @@
    PEG SOLITAIRE
    ========================================================== */
 
+//boton volver al menu.
+//modificar tablero
+//modificar flecha y ficha
+
+
 // ----- ELEMENTOS DEL DOM -----
 const canvas = document.getElementById('pegCanvas');
 const ctx = canvas.getContext('2d');

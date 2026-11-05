@@ -2088,6 +2088,13 @@ footer {
     max-height: calc(100% - 56px);
 }
 
+.game-stage:fullscreen canvas {
+    height: calc(100% - 56px);
+    width: auto;
+    aspect-ratio: 1 / 1;
+    max-width: 100%;
+}
+
 .blocka-text { 
     color: var(--neutral-light);
 }
