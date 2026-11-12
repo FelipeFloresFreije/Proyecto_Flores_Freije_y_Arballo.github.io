@@ -1,3 +1,6 @@
+// mejorar seccion de comunidad
+// mejorar ganeria
+// mejorar la pantalla pequeña
 class RunnerView{
     constructor(){
         this.canvas = document.createElement('canvas');
@@ -41,7 +44,7 @@ class RunnerView{
         ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
         ctx.fillRect(0, this.canvas.height / 2 - 30, this.canvas.width, 60);
         ctx.fillStyle = '#fff';
-        ctx.font = '24px sans-serif';
+        ctx.font = '24px Nunito';
         ctx.textAlign = 'center';
         ctx.fillText(texto, this.canvas.width / 2, this.canvas.height / 2 + 8);
         ctx.textAlign = 'start';

@@ -26,6 +26,8 @@ class PegController {
         this.animando = false;
         this.intervaloTimer = null;
 
+        this.intentosFueraTablero = 0;
+
         this.configurarEventos();
     }
 
@@ -110,7 +112,7 @@ class PegController {
         this.view.actualizarHud(this.model);
 
         this.iniciarTimer();
-
+        this.intentosFueraTablero = 0;
         if (!this.animando) {
 
             this.animando = true;
@@ -223,7 +225,7 @@ class PegController {
 
             this.model.aplicarMovimiento(this.fichaActiva, destino);
 
-            this.view.actualizarHud(this.model);
+            this.view.actualizarHud(this.model.obtenerCantidadFichas(), this.model.tiempoRestante);
 
             const motivo = this.model.verificarFin();
 
@@ -232,10 +234,22 @@ class PegController {
             }
 
         } else {
+            const fila = Math.floor(y / this.view.tamCelda);
+            const col = Math.floor(x/this.view.tamCelda);
 
-            // Movimiento inválido: vuelve a su posición
-
-            this.fichaActiva.colocarEn(this.fichaActiva.fila, this.fichaActiva.col, this.model.tamCelda);
+            if(
+                fila >=0 && fila < 7 && col >= 0 && col < 7 &&
+                this.model.tablero[fila][col] === -1
+            ){
+                this.intentosFueraTablero++;
+                if (this.intentosFueraTablero > 3){
+                   this.terminarJuego('fueraTablero'); 
+                }
+            }
+            this.fichaActiva.colocarEn(
+            this.fichaActiva.fila,
+            this.fichaActiva.col,
+            this.view.tamCelda);
         }
 
         this.fichaActiva = null;

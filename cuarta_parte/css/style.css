@@ -1772,7 +1772,7 @@ footer {
     padding: 20px;
     border-radius: var(--surface-radius);
     box-sizing: border-box;
-    background-color: var(--primary-default);
+    background-color: var(--primary-darker);
     color: var(--neutral-white);
 }
 

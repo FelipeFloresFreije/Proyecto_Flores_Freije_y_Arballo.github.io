@@ -135,8 +135,34 @@ export class PegModel {
             const destF = fila + 2 * df;
             const destC = col + 2 * dc;
 
-            if (this.dentroDelTablero(medioF, medioC) && this.dentroDelTablero(destF, destC) && this.tablero[medioF][medioC] === 1 && this.tablero[destF][destC] === 0) {
-                lista.push({fila: destF, col: destC, saltadaFila: medioF, saltadaCol: medioC});
+            if (this.dentroDelTablero(medioF, medioC) && 
+                this.dentroDelTablero(destF, destC) && 
+                this.tablero[medioF][medioC] === 1 && 
+                this.tablero[destF][destC] === 0) {
+                lista.push({
+                    fila: destF, 
+                    col: destC, 
+                    saltadas: [
+                        {fila: medioF, col: medioC}
+                    ]
+                });
+            }
+            const segundoF = fila + 2 * df;
+            const segundoC = col + 2 * dc;
+
+            const destF2 = fila + 3 * df;
+            const destC2 = col + 3 * dc;
+
+            if(this.dentroDelTablero(medioF, medioC) && this.dentroDelTablero(segundoF, segundoC) && this.dentroDelTablero(destF2, destC2) &&
+            this.tablero[medioF][medioC] === 1 && this.tablero[segundoF][segundoC] === 1 && this.tablero[destF2][destC2] === 0){
+                lista.push({
+                    fila: destF2,
+                    col: destC2,
+                    saltadas: [
+                        {fila: medioF, col: medioC},
+                        {fila: segundoF, col: segundoC}
+                    ]
+                });        
             }
         }
 
@@ -167,13 +193,26 @@ export class PegModel {
     aplicarMovimiento(ficha, destino) {
 
         this.tablero[ficha.fila][ficha.col] = 0;
-
+        /*
         this.tablero[destino.saltadaFila]
                      [destino.saltadaCol] = 0;
 
-        this.tablero[destino.fila][destino.col] = 1;
+        this.tablero[destino.segundaSaltadaFila]
+                    [destino.segundaSaltadaCol] = 0;
 
-        this.fichas = this.fichas.filter(f => !(f.fila === destino.saltadaFila && f.col === destino.saltadaCol));
+        this.tablero[destino.fila][destino.col] = 1;
+        */
+       destino.saltadas.forEach(pos => {
+            this.tablero[pos.fila][pos.col] = 0;
+       });
+
+       this.tablero[destino.fila][destino.col] = 1;
+
+        this.fichas = this.fichas.filter(f => !destino.saltadas.some(pos => f.fila === pos.fila && f.col === pos.col)
+            /*
+            !(f.fila === destino.saltadaFila && f.col === destino.saltadaCol)
+            */
+        );
 
         ficha.colocarEn(destino.fila, destino.col, this.tamCelda);
 

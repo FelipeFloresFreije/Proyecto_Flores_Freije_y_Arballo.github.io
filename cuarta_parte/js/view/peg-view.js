@@ -235,6 +235,10 @@ export class PegView {
             this.pegFinTitulo.textContent = 'Se acabó el tiempo';
 
             this.pegFinTexto.textContent ='Te quedaron ' + model.obtenerCantidadFichas() + ' fichas.';
+        } else if(motivo === 'fueraTablero'){
+            this.pegFinTitulo.textContent = '¡Has pedido!';
+
+            this.pegFinTitulo.textContent = 'sacaste demasiadas fichas fuera del tablero. ¡intentalo de nuevo!';
         } else {
 
             this.pegFinTitulo.textContent = 'Sin movimientos';
