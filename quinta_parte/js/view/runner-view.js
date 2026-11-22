@@ -1,73 +1,107 @@
 // VIEW: solo dibuja. Lee el model, nunca lo modifica.
 
-// Spritesheet del pájaro: una fila por animación, un frame por columna.
-const FRAME_ANCHO = 64;
-const FRAME_ALTO = 64;
-const ANIMACIONES_PAJARO = {
-    planeo:    { fila: 0, frames: 4, fps: 8,  loop: true  },
-    aleteo:    { fila: 1, frames: 4, fps: 14, loop: false },
-    caida:     { fila: 2, frames: 2, fps: 6,  loop: true  },
-    explosion: { fila: 3, frames: 6, fps: 12, loop: false }
+const BASE_IMG = 'assets/quinta_parte/img/';
+const ASSETS = {
+    murcielago: BASE_IMG + 'bat.png',
+    moneda:     BASE_IMG + 'coin.png',
+    enemigo:    BASE_IMG + 'enemy.png',
+    torre:      BASE_IMG + 'tower.png',
+    background: BASE_IMG + 'background.png',
+    midground:  BASE_IMG + 'midground.png',
+    foreground: BASE_IMG + 'foreground.png',
+    ground:     BASE_IMG + 'ground.png'
 };
 
-// Una sola fila de frames por elemento (ajustá a tus spritesheets)
-const SPRITES_ELEMENTOS = {
-    moneda:     { src: 'assets/img/moneda.png',     frameAncho: 48, frameAlto: 48, frames: 6, fps: 10 },
-    murcielago: { src: 'assets/img/murcielago.png', frameAncho: 64, frameAlto: 64, frames: 4, fps: 12 }
+// Spritesheets de una sola fila. El tamaño de cada frame se calcula
+// con (ancho de la imagen / cantidad de frames), así no hay que
+// medir nada a mano.
+const SPRITES = {
+    murcielago: { frames: 8, dibujoAncho: 64, dibujoAlto: 64 },
+    moneda:     { frames: 8, fps: 12, espejo: false },
+    enemigo:    { frames: 8, fps: 12, espejo: false }   
 };
 
-// Generador pseudoaleatorio con semilla: da siempre el mismo resultado,
-// así los tiles de cada capa son iguales en cada partida.
-function pseudoAleatorio(semilla) {
-    return function () {
-        semilla = (semilla * 16807) % 2147483647;
-        return semilla / 2147483647;
-    };
+// Animaciones del murciélago (índices de frame dentro de la fila)
+const ANIMACIONES_MURCIELAGO = {
+    planeo: { frames: [0, 1, 2, 3, 4, 5, 6, 7], fps: 8,  loop: true  },
+    aleteo: { frames: [0, 1, 2, 3, 4, 5, 6, 7], fps: 24, loop: false },
+    caida:  { frames: [3],                      fps: 1,  loop: true  }
+};
+
+// Animación por keyframes de la explosión (t va de 0 a 1 y se interpola entre claves)
+const KEYFRAMES_EXPLOSION = [
+    { t: 0,    escala: 1,   rot: 0,   alpha: 1, anillo: 0 },
+    { t: 0.35, escala: 1.7, rot: 3.5, alpha: 1, anillo: 0.5 },
+    { t: 1,    escala: 0.2, rot: 9,   alpha: 0, anillo: 1 }
+];
+
+// Spritesheet de torres: 6 variantes en fila. Fracciones del frame:
+const TORRE = { frames: 6, fusteFrac: 0.45, capFrac: 0.35, cuerpoDesde: 0.55, cuerpoAlto: 0.08 };
+
+// Capas de parallax, de atrás hacia adelante. factor 1 = misma velocidad que las torres.
+const CAPAS = [
+    { img: 'background', factor: 0.05, espejo: false },
+    { img: 'midground',  factor: 0.2,  espejo: false },
+    { img: 'foreground', factor: 0.5,  espejo: false },
+    { img: 'ground',     factor: 1.0,  espejo: false }
+];
+
+function cargarImagen(src) {
+    const img = new Image();
+    img.src = src;
+    return img;
 }
 
-// Una capa de parallax: un "tile" que se repite horizontalmente.
-// factor = fracción del movimiento del mundo que recorre la capa
-// (0 = quieta, 1 = misma velocidad que el pájaro y los obstáculos).
-class CapaParallax {
-    constructor(ancho, alto, y, factor, dibujar) {
-        this.factor = factor;
-        this.y = y;
+function listo(img) {
+    return img.complete && img.naturalWidth > 0;
+}
 
-        // El tile se dibuja una sola vez en un canvas auxiliar.
-        // Más adelante se puede reemplazar por una imagen (new Image()).
-        this.tile = document.createElement('canvas');
-        this.tile.width = ancho;
-        this.tile.height = alto;
-        dibujar(this.tile.getContext('2d'), ancho, alto);
-    }
-
-    render(ctx, mundoX, anchoPantalla) {
-        const w = this.tile.width;
-        let x = -Math.floor((mundoX * this.factor) % w);
-        for (; x < anchoPantalla; x += w) {
-            ctx.drawImage(this.tile, x, this.y);
+function interpolar(kfs, t) {
+    for (let i = 1; i < kfs.length; i++) {
+        if (t <= kfs[i].t) {
+            const a = kfs[i - 1];
+            const b = kfs[i];
+            const u = (t - a.t) / (b.t - a.t);
+            const r = {};
+            for (const k in a) {
+                if (k !== 't') r[k] = a[k] + (b[k] - a[k]) * u;
+            }
+            return r;
         }
     }
+    const ultima = Object.assign({}, kfs[kfs.length - 1]);
+    delete ultima.t;
+    return ultima;
 }
 
-// Dibuja una fila de edificios de izquierda a derecha, apoyados abajo del tile.
-function dibujarEdificios(c, w, h, rnd, opc) {
-    let x = 0;
-    while (x < w) {
-        const ancho = Math.min(opc.anchoMin + rnd() * (opc.anchoMax - opc.anchoMin), w - x);
-        const alto = opc.altoMin + rnd() * (opc.altoMax - opc.altoMin);
-        c.fillStyle = opc.color;
-        c.fillRect(x, h - alto, ancho, alto);
+// Una capa de parallax: una imagen que se repite horizontalmente.
+class CapaParallax {
+    constructor(img, factor, espejo) {
+        this.img = img;
+        this.factor = factor;
+        this.espejo = espejo;
+    }
 
-        if (opc.ventanas) {
-            c.fillStyle = opc.ventanas;
-            for (let wx = x + 8; wx < x + ancho - 8; wx += 14) {
-                for (let wy = h - alto + 10; wy < h - 10; wy += 18) {
-                    if (rnd() > 0.65) c.fillRect(wx, wy, 6, 9);
-                }
+    render(ctx, mundoX, ancho, alto) {
+        if (!listo(this.img)) return;
+
+        const w = ancho;                     
+        const pos = mundoX * this.factor;
+        const base = Math.floor(pos / w);
+        const x0 = -Math.floor(pos - base * w);
+
+        for (let i = 0; x0 + i * w < ancho; i++) {
+            const x = x0 + i * w;
+            if (this.espejo && (base + i) % 2 !== 0) {
+                ctx.save();
+                ctx.translate(x + w, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(this.img, 0, 0, w, alto);
+                ctx.restore();
+            } else {
+                ctx.drawImage(this.img, x, 0, w, alto);
             }
         }
-        x += ancho;
     }
 }
 
@@ -76,179 +110,131 @@ class RunnerView {
         this.canvas = document.createElement('canvas');
         this.canvas.width = model.ancho;
         this.canvas.height = model.alto;
-        this.canvas.style.width = '100%';
-        this.canvas.style.display = 'block';
         this.canvas.tabIndex = 0;
 
         contenedor.innerHTML = '';
         contenedor.appendChild(this.canvas);
 
         this.ctx = this.canvas.getContext('2d');
+        this.ctx.imageSmoothingEnabled = false;   
 
-        // El pájaro se dibuja siempre en la misma X de pantalla;
-        // lo que cambia es el mundo.
+        // El murciélago se dibuja siempre en la misma X de pantalla;
         this.pantallaX = 150;
 
-        this.spritePajaro = new Image();
-        this.spritePajaro.src = 'assets/img/pajaro.png';
-
-        this.imgElementos = {};
-
-        for (const tipo in SPRITES_ELEMENTOS) {
-            const img = new Image();
-            img.src = SPRITES_ELEMENTOS[tipo].src;
-            this.imgElementos[tipo] = img;
+        this.img = {};
+        for (const nombre in ASSETS) {
+            this.img[nombre] = cargarImagen(ASSETS[nombre]);
         }
 
-        this.capas = this.crearCapas(model);
-    }
-
-    // Las 4 capas, de la más lejana (lenta) a la más cercana (rápida)
-    crearCapas(model) {
-        const W = model.ancho;
-        const H = model.alto;
-        const S = model.altoSuelo;
-
-        return [
-            // 1. Cielo: luna y estrellas (casi no se mueven)
-            new CapaParallax(W, H, 0, 0.05, (c, w, h) => {
-                const rnd = pseudoAleatorio(11);
-                c.fillStyle = '#ffffff';
-                for (let i = 0; i < 60; i++) {
-                    c.fillRect(rnd() * w, rnd() * h * 0.6, 2, 2);
-                }
-                c.fillStyle = '#f4f1d0';
-                c.beginPath();
-                c.arc(w * 0.75, 90, 36, 0, Math.PI * 2);
-                c.fill();
-            }),
-
-            // 2. Ciudad lejana (lenta, color cercano al cielo)
-            new CapaParallax(W, 260, H - S - 260, 0.2, (c, w, h) => {
-                dibujarEdificios(c, w, h, pseudoAleatorio(23), {
-                    anchoMin: 50, anchoMax: 110, altoMin: 70, altoMax: 170,
-                    color: '#0F3A6B', ventanas: null
-                });
-            }),
-
-            // 3. Edificios cercanos con ventanas (velocidad media)
-            new CapaParallax(W, 320, H - S - 320, 0.5, (c, w, h) => {
-                dibujarEdificios(c, w, h, pseudoAleatorio(37), {
-                    anchoMin: 70, anchoMax: 130, altoMin: 110, altoMax: 260,
-                    color: '#1B2A4A', ventanas: '#ffd966'
-                });
-            }),
-
-            // 4. Suelo (factor 1: misma velocidad que el mundo)
-            new CapaParallax(W, S, H - S, 1.0, (c, w, h) => {
-                c.fillStyle = '#2A1747';
-                c.fillRect(0, 0, w, h);
-                c.fillStyle = '#6B3FA0';
-                c.fillRect(0, 0, w, 4);
-                // marcas para que se note el movimiento (960 / 48 = entero: encaja sin cortes)
-                for (let x = 0; x < w; x += 48) {
-                    c.fillRect(x, 16, 24, 4);
-                }
-            })
-        ];
+        this.capas = CAPAS.map(c => new CapaParallax(this.img[c.img], c.factor, c.espejo));
     }
 
     render(model) {
         const ctx = this.ctx;
         const p = model.pajaro;
 
-        // Fondo
-        ctx.fillStyle = '#0C447C';
+        // Fondo de seguridad por si falta alguna imagen
+        ctx.fillStyle = '#0B0B2B';
         ctx.fillRect(0, 0, model.ancho, model.alto);
 
-        // Capas de fondo (1 a 3), después las tuberías y al final el suelo (capa 4),
-        // así el suelo tapa la base de las tuberías.
+        // Capas de fondo (1 a 3), después torres y elementos, y al final el suelo (capa 4), así el suelo tapa la base de las torres.
         const suelo = this.capas[this.capas.length - 1];
         for (const capa of this.capas.slice(0, -1)) {
-            capa.render(ctx, p.mundoX, model.ancho);
+            capa.render(ctx, p.mundoX, model.ancho, model.alto);
         }
         this.dibujarTuberias(model);
         this.dibujarElementos(model);
-        suelo.render(ctx, p.mundoX, model.ancho);
+        suelo.render(ctx, p.mundoX, model.ancho, model.alto);
 
-        this.dibujarPajaro(model);
+        this.dibujarMurcielago(model);
+        this.dibujarHud(model);
 
-        // Distancia recorrida
-        ctx.fillStyle = '#fff';
-        ctx.font = '16px Nunito';
-        ctx.fillText('Distancia: ' + Math.floor(p.mundoX) + ' px', 16, 28);
-        ctx.fillText('Puntaje: ' + model.puntaje + ' / ' + model.puntajeMeta, 16, 52);
-
+        
         if (model.estado === 'esperando') {
-            this.mensaje('Llegá a ' + model.puntajeMeta + ' puntos. Espacio o Click para comenzar');
+            const objetivo = model.modo === 'infinito'
+                ? 'Conseguí tantos puntos como puedas.'
+                : 'Llegá a ' + model.puntajeMeta + ' puntos.';
+
+            this.mensaje(
+                '¡Listo para volar!',
+                objetivo + ' Espacio o click para comenzar'
+            );
+
         } else if (model.estado === 'terminado') {
-            this.mensaje('Game Over - Puntaje: ' + model.puntaje + ' - Espacio o click para reiniciar');
+            this.mensaje(
+                'Game Over - Puntaje: ' + model.puntaje,
+                'Espacio o click para reiniciar'
+            );
+
         } else if (model.estado === 'victoria') {
-            this.mensaje('¡Ganaste! Puntaje: ' + model.puntaje + ' - Espacio o click para reiniciar');
+            this.mensaje(
+                '¡Ganaste! - Puntaje: ' + model.puntaje,
+                'Espacio o click para reiniciar'
+            );
         }
     }
 
-    // Cada tubería se dibuja en: x del mundo - x del pájaro + x fija del pájaro en pantalla
+    // ---------- Torres ----------
+
     dibujarTuberias(model) {
         const ctx = this.ctx;
         const p = model.pajaro;
         const sueloY = model.alto - model.altoSuelo;
-        const alturaBorde = 24;
-        const saliente = 6;
+        const img = this.img.torre;
 
         for (const t of model.tuberias) {
             const x = Math.round(t.mundoX - p.mundoX + this.pantallaX);
-            if (x > model.ancho || x + t.ancho < 0) continue; // fuera de pantalla
+            if (x > model.ancho + 100 || x + t.ancho < -100) continue; // fuera de pantalla
 
             const huecoFin = t.huecoY + t.huecoAlto;
 
-            // Cuerpos
-            ctx.fillStyle = '#3F8F6B';
-            ctx.fillRect(x, 0, t.ancho, t.huecoY);
-            ctx.fillRect(x, huecoFin, t.ancho, sueloY - huecoFin);
-
-            // Bordes (bocas) de cada tubería
-            ctx.fillStyle = '#56B58A';
-            ctx.fillRect(x - saliente, t.huecoY - alturaBorde, t.ancho + saliente * 2, alturaBorde);
-            ctx.fillRect(x - saliente, huecoFin, t.ancho + saliente * 2, alturaBorde);
+            if (listo(img)) {
+                const xc = x + t.ancho / 2;
+                // torre de arriba (cuelga del techo) y de abajo (sale del suelo)
+                this.dibujarTorre(img, t.variante, xc, t.huecoY, t.huecoY, -1, t.ancho);
+                this.dibujarTorre(img, t.variante, xc, huecoFin, sueloY - huecoFin, 1, t.ancho);
+            } else {
+                // Provisorio hasta que cargue la imagen
+                ctx.fillStyle = '#4B3F72';
+                ctx.fillRect(x, 0, t.ancho, t.huecoY);
+                ctx.fillRect(x, huecoFin, t.ancho, sueloY - huecoFin);
+            }
         }
     }
 
-    mensaje(texto) {
+    // Dibuja una torre desde su punta (la que mira al hueco) hacia afuera.
+    dibujarTorre(img, variante, xc, yPunta, largo, dir, ancho) {
         const ctx = this.ctx;
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-        ctx.fillRect(0, this.canvas.height / 2 - 30, this.canvas.width, 60);
-        ctx.fillStyle = '#fff';
-        ctx.font = '24px Nunito';
-        ctx.textAlign = 'center';
-        ctx.fillText(texto, this.canvas.width / 2, this.canvas.height / 2 + 8);
-        ctx.textAlign = 'start';
-    }
+        const fw = img.naturalWidth / TORRE.frames;
+        const fh = img.naturalHeight;
+        const fx = variante * fw;
 
-    dibujarPajaro(model) {
-        const ctx = this.ctx;
-        const p = model.pajaro;
-        const anim = ANIMACIONES_PAJARO[p.animacion];
-        if (model.tFreno > 0) {
-            ctx.globalAlpha = Math.floor(model.tFreno * 10) % 2 ? 0.4 : 1;
+        const anchoDibujo = ancho / TORRE.fusteFrac;
+        const s = anchoDibujo / fw;
+        const capH = fh * TORRE.capFrac * s;
+
+        ctx.save();
+        ctx.translate(xc, yPunta);
+        ctx.scale(1, dir);
+
+        // cuerpo: franja lisa repetida
+        const sy = fh * TORRE.cuerpoDesde;
+        const sh = Math.max(1, Math.round(fh * TORRE.cuerpoAlto));
+        const dh = sh * s;
+        const srcX = fx + fw * (0.5 - TORRE.fusteFrac / 2);
+        for (let y = capH - 1; y < largo; y += dh) {
+            const h = Math.min(dh, largo - y);
+            ctx.drawImage(img, srcX, sy, fw * TORRE.fusteFrac, h / s, -ancho / 2, y, ancho, h);
         }
 
-        let frame = Math.floor(p.tAnim * anim.fps);
-        frame = anim.loop ? frame % anim.frames : Math.min(frame, anim.frames - 1);
+        // remate con la gárgola, encima del cuerpo
+        ctx.drawImage(img, fx, 0, fw, fh * TORRE.capFrac,
+            -anchoDibujo / 2, 0, anchoDibujo, capH);
 
-        const s = this.spritePajaro;
-        if (s.complete && s.naturalWidth > 0) {
-            ctx.drawImage(s,
-                frame * FRAME_ANCHO, anim.fila * FRAME_ALTO, FRAME_ANCHO, FRAME_ALTO,
-                this.pantallaX, p.y, p.ancho, p.alto);
-        } else {
-            // Provisorio hasta que tengas el sprite
-            ctx.fillStyle = '#6B3FA0';
-            ctx.fillRect(this.pantallaX, p.y, p.ancho, p.alto);
-        }
-
-        ctx.globalAlpha = 1;
+        ctx.restore();
     }
+
+    // ---------- Monedas y enemigos ----------
 
     dibujarElementos(model) {
         const ctx = this.ctx;
@@ -259,19 +245,153 @@ class RunnerView {
             const x = Math.round(e.mundoX - p.mundoX + this.pantallaX);
             if (x > model.ancho || x + e.ancho < 0) continue;
 
-            const cfg = SPRITES_ELEMENTOS[e.tipo];
-            const img = this.imgElementos[e.tipo];
-            const frame = Math.floor(e.tAnim * cfg.fps) % cfg.frames;
+            const cfg = SPRITES[e.tipo];
+            const img = this.img[e.tipo];
 
-            if (img.complete && img.naturalWidth > 0) {
-                ctx.drawImage(img,
-                    frame * cfg.frameAncho, 0, cfg.frameAncho, cfg.frameAlto,
-                    x, e.y, e.ancho, e.alto);
+            if (e.golpeado) ctx.globalAlpha = 0.4;
+
+            if (listo(img)) {
+                const fw = img.naturalWidth / cfg.frames;
+                const fh = img.naturalHeight;
+                const frame = Math.floor(e.tAnim * cfg.fps) % cfg.frames;
+
+                if (cfg.espejo) {
+                    ctx.save();
+                    ctx.translate(x + e.ancho, e.y);
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(img, frame * fw, 0, fw, fh, 0, 0, e.ancho, e.alto);
+                    ctx.restore();
+                } else {
+                    ctx.drawImage(img, frame * fw, 0, fw, fh, x, e.y, e.ancho, e.alto);
+                }
             } else {
-                // Provisorio hasta que tengas los sprites
-                ctx.fillStyle = e.tipo === 'moneda' ? '#ffd400' : '#222';
+                // Provisorio hasta que cargue la imagen
+                ctx.fillStyle = e.tipo === 'moneda' ? '#ffd400' : '#2ecc40';
                 ctx.fillRect(x, e.y, e.ancho, e.alto);
             }
+
+            ctx.globalAlpha = 1;
         }
+    }
+
+    // ---------- Murciélago (personaje) ----------
+
+    dibujarMurcielago(model) {
+        const ctx = this.ctx;
+        const p = model.pajaro;
+        const img = this.img.murcielago;
+        const cfg = SPRITES.murcielago;
+
+        const cx = this.pantallaX + p.ancho / 2;
+        const cy = p.y + p.alto / 2;
+
+        let escala = 1;
+        let rot = 0;
+        let alpha = 1;
+        let frame = 0;
+
+        if (p.animacion === 'explosion') {
+            // animación por keyframes: giro, crecimiento, fundido y anillo de impacto
+            const k = interpolar(KEYFRAMES_EXPLOSION, Math.min(p.tAnim / model.duracionExplosion, 1));
+            escala = k.escala;
+            rot = k.rot;
+            alpha = k.alpha;
+            frame = 3;
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, 1 - k.anillo);
+            ctx.strokeStyle = '#ff9f1a';
+            ctx.lineWidth = 8;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 20 + k.anillo * 110, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.restore();
+        } else {
+            const anim = ANIMACIONES_MURCIELAGO[p.animacion];
+            let i = Math.floor(p.tAnim * anim.fps);
+            i = anim.loop ? i % anim.frames.length : Math.min(i, anim.frames.length - 1);
+            frame = anim.frames[i];
+            // se inclina según la velocidad vertical
+            rot = Math.max(-0.4, Math.min(0.7, p.vy / 1000));
+        }
+
+        // parpadeo mientras está frenado por un enemigo
+        if (model.tFreno > 0) {
+            alpha *= Math.floor(model.tFreno * 10) % 2 ? 0.4 : 1;
+        }
+
+        if (alpha <= 0) return;
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+        ctx.scale(escala, escala);
+        ctx.globalAlpha = alpha;
+
+        if (listo(img)) {
+            const fw = img.naturalWidth / cfg.frames;
+            const fh = img.naturalHeight;
+            ctx.drawImage(img, frame * fw, 0, fw, fh,
+                -cfg.dibujoAncho / 2, -cfg.dibujoAlto / 2, cfg.dibujoAncho, cfg.dibujoAlto);
+        } else {
+            // Provisorio hasta que cargue la imagen
+            ctx.fillStyle = '#9D6FD9';
+            ctx.fillRect(-p.ancho / 2, -p.alto / 2, p.ancho, p.alto);
+        }
+
+        ctx.restore();
+    }
+
+    // ---------- HUD y mensajes ----------
+
+    
+    dibujarHud(model) {
+        const ctx = this.ctx;
+
+        ctx.fillStyle = 'rgba(12, 68, 124, 0.8)';
+        ctx.fillRect(12, 12, 230, 60);
+
+        ctx.fillStyle = '#fff';
+        ctx.font = '700 16px Nunito, sans-serif';
+        ctx.textAlign = 'start';
+
+        const objetivo = model.modo === 'infinito' ? '∞' : model.puntajeMeta;
+
+        ctx.fillText('Puntaje: ' + model.puntaje + ' / ' + objetivo, 24, 36);
+
+        // Barra de progreso: solo para modos con objetivo.
+        if (model.modo !== 'infinito') {
+            const progreso = Math.min(model.puntaje / model.puntajeMeta, 1);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+            ctx.fillRect(24, 48, 206, 10);
+
+            ctx.fillStyle = '#67E8F9';
+            ctx.fillRect(24, 48, 206 * progreso, 10);
+        }
+
+        if (model.tFreno > 0) {
+            ctx.fillStyle = '#FF8080';
+            ctx.font = '700 16px Nunito, sans-serif';
+            ctx.fillText('¡Frenado!', 256, 36);
+        }
+    }
+
+
+    mensaje(titulo, subtitulo) {
+        const ctx = this.ctx;
+        const cx = this.canvas.width / 2;
+        const cy = this.canvas.height / 2;
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+        ctx.fillRect(0, cy - 50, this.canvas.width, 100);
+
+        ctx.fillStyle = '#fff';
+        ctx.textAlign = 'center';
+        ctx.font = '700 30px Nunito, sans-serif';
+        ctx.fillText(titulo, cx, cy - 6);
+        ctx.font = '400 20px Nunito, sans-serif';
+        ctx.fillText(subtitulo, cx, cy + 28);
+        ctx.textAlign = 'start';
     }
 }

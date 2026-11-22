@@ -1711,6 +1711,19 @@ footer {
     object-fit: cover;
 }
 
+.game-mode {
+    padding: 10px 14px;
+    margin: 10px;
+    border: 2px solid #67E8F9;
+    border-radius: 6px;
+    background: #0B0B2B;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
 .game-play {
     position: absolute;
     left: 0;
@@ -2196,22 +2209,13 @@ footer {
 
 .game-stage canvas {
     position: absolute;
-    top: 56px;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: calc(100% - 56px);
-}
-
-.game-stage:fullscreen canvas {
-    height: calc(100% - 56px);
-    width: auto;
-    aspect-ratio: 1 / 1;
-    max-width: 100%;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: var(--neutral-black);
+    image-rendering: pixelated;
+    outline: none;
 }
 
 .blocka-text { 

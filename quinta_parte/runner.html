@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peg Solitaire - Minijuegos</title>
+    <title>Bat Runner - Minijuegos</title>
 
     <link rel="stylesheet" href="css/style.css">
 
@@ -73,9 +73,9 @@
             <div class="sidebar-group">
                 <h3 class="sidebar-title card-text">SEGUÍ JUGANDO</h3>
                 <a href="juego.html" class="sidebar-continue">
-                    <img src="assets/img/peg.jpg" alt="" class="sidebar-continue-img">
+                    <img src="quinta_parte/assets/quinta_parte/img/background.jpg" alt="" class="sidebar-continue-img">
                     <div class="sidebar-continue-info">
-                        <span class="card-title">Peg Solitaire</span>
+                        <span class="card-title">Bat Runner</span>
                         <span class="card-text">Jugado hace 2 horas</span>
                     </div>
                 </a>
@@ -139,7 +139,7 @@
                 <ul class="sidebar-history small">
                     <li>Batman Arkham Knight</li>
                     <li>Batman: Arkham City</li>
-                    <li>Peg Solitaire</li>
+                    <li>Bat Runner</li>
                 </ul>
             </div>
 
@@ -187,16 +187,29 @@
         <!-- BREADCRUMB -->
         <nav class="breadcrumb small" aria-label="Breadcrumb">
             <a href="index.html">Home</a> &gt;
-            <a href="#">Puzzle</a> &gt;
-            <span aria-current="page">Peg Solitaire</span>
+            <a href="#">Acción</a> &gt;
+            <span aria-current="page">Bat Runner</span>
         </nav>
 
         <!-- REPRODUCTOR -->
         <section class="game-player" aria-label="Juego">
 
             <div class="game-stage" id="gameStage">
-                <img src="assets/img/telltale.jpg" alt="Portada de Peg Solitaire" class="game-stage-image">
-                <button type="button" class="btn btn-small btn-primary game-play">Jugar</button>
+
+                <img src="assets/quinta_parte/img/background.png" alt="Portada de Bat Runner" class="game-stage-image">
+
+                <div class="game-menu">
+                    <select id="gameMode" class="game-mode">
+                        <option value="normal">Modo normal</option>
+                        <option value="dificil">Modo difícil</option>
+                        <option value="infinito">Modo infinito</option>
+                    </select>
+
+                    <button type="button" class="btn btn-small btn-primary game-play">
+                        Jugar
+                    </button>
+                </div>
+
             </div>
 
             <div class="game-actions">
@@ -229,18 +242,20 @@
 
             <article class="info-card">
                 <h2>Cómo Jugar.</h2>
-                <p class="card-text">Aprende a dominar las habilidades de Batman mientras recorres Gotham City.</p>
-                <p class="card-text">Combina ataques cuerpo a cuerpo, gadgets y movimientos especiales para enfrentarte a los enemigos.</p>
-                <p class="card-text">Explora el entorno, utiliza el sigilo cuando sea necesario y resuelve los desafíos que encuentres durante la aventura.</p>
-                <p class="card-text">Observa tu entorno, administra tus recursos y elige la estrategia adecuada para superar cada situación.</p>
-                <p class="card-text">La clave está en aprovechar todas las herramientas del Caballero Oscuro.</p>
+                <p class="card-text"><strong>Controles:</strong> presioná Jugar y usá la barra espaciadora, la flecha arriba o el click del mouse para aletear. Si no hacés nada, el murciélago cae.</p>
+                <p class="card-text"><strong>Objetivo:</strong> el murciélago avanza solo por la ciudad. Pasá por el hueco entre las torres y llegá a 40 puntos para ganar.</p>
+                <p class="card-text"><strong>Puntos:</strong> cada torre superada suma 1 punto y cada gema roja que recojas suma 5.</p>
+                <p class="card-text"><strong>Enemigos:</strong> el murciélago verde no termina la partida, pero te frena y te hace parpadear unos segundos. Esquivalo para no perder ritmo.</p>
+                <p class="card-text"><strong>Cuidado:</strong> chocar con una torre o tocar el suelo termina la partida. Los huecos se achican a medida que avanzás y no están siempre a la misma altura ni distancia.</p>
+                <p class="card-text">Tip: usá Pantalla Completa para tener más espacio de juego.</p>
             </article>
 
             <article class="info-card">
                 <h2>Acerca del juego.</h2>
-                <p class="card-text">Ponte en la piel de Batman y recorre Gotham City en una aventura llena de acción, misterio y combate.</p>
-                <p class="card-text">Enfréntate a peligrosos criminales, resuelve enigmas y utiliza tus habilidades, gadgets y estrategia para proteger la ciudad de las amenazas que acechan desde las sombras.</p>
-                <p class="card-text">Explora Gotham, descubre secretos y demuestra que incluso en la oscuridad siempre hay alguien dispuesto a luchar por la justicia.</p>
+                <p class="card-text">Bat Runner es un juego de scroll horizontal inspirado en Flappy Bird. Controlás a un murciélago que vuela de noche entre las torres góticas de una ciudad iluminada por la luna.</p>
+                <p class="card-text">El escenario usa parallax de 4 capas (cielo, ciudad lejana, edificios y suelo) que se mueven a distinta velocidad para dar sensación de profundidad.</p>
+                <p class="card-text">El murciélago reacciona a cada situación con animaciones propias: aleteo al dar impulso, planeo, caída y una explosión al chocar. Además, en la escena aparecen gemas animadas que suman puntos y un enemigo volador que te frena.</p>
+                <p class="card-text">Hecho con HTML, CSS y JavaScript, con una arquitectura Modelo-Vista-Controlador.</p>
             </article>
 
         </section>
@@ -251,10 +266,10 @@
             <h2>Galería</h2>
 
             <div class="gallery-grid">
-                <figure class="gallery-item"><img src="assets/img/galeria-1.jpg" alt="Captura 1 del juego"></figure>
-                <figure class="gallery-item"><img src="assets/img/galeria-2.jpg" alt="Captura 2 del juego"></figure>
-                <figure class="gallery-item"><img src="assets/img/galeria-3.jpg" alt="Captura 3 del juego"></figure>
-                <figure class="gallery-item"><img src="assets/img/galeria-4.jpg" alt="Captura 4 del juego"></figure>
+                <figure class="gallery-item"><img src="assets/img/galeria-1.jpg" alt="Captura 1 de Bat Runner: murciélago volando entre las torres"></figure>
+                <figure class="gallery-item"><img src="assets/img/galeria-2.jpg" alt="Captura 2 de Bat Runner: recolectando una gema"></figure>
+                <figure class="gallery-item"><img src="assets/img/galeria-3.jpg" alt="Captura 3 de Bat Runner: esquivando al enemigo verde"></figure>
+                <figure class="gallery-item"><img src="assets/img/galeria-4.jpg" alt="Captura 4 de Bat Runner: explosión al chocar con una torre"></figure>
             </div>
 
         </section>
