@@ -1664,9 +1664,6 @@ footer {
 .breadcrumb {
     color: var(--neutral-black);
     text-align: center;
-}
-
-.breadcrumb {
     align-self: flex-start;
     padding-left: 8px;
     color: var(--neutral-black);
@@ -2019,10 +2016,6 @@ footer {
     animation: cardIn 0.5s ease backwards;
 }
 
-.comment-new {
-    animation: cardIn 0.5s ease backwards;
-}
-
 /* ==========================================================
    RESPONSIVE
    ========================================================== */
@@ -2306,6 +2299,151 @@ footer {
     font-size: 20px;
     font-weight: 400;
     line-height: 24px;
+}
+
+.game-stage .game-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    z-index: 2;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.game-menu .game-mode { margin: 0; }
+
+.game-menu .game-play {
+    position: static;   /* anula el absolute de .game-play */
+    margin: 0;
+}
+
+/* ----- ANIMACIONES CSS3 DE LA PORTADA ----- */
+.game-stage .bat-css {
+    position: absolute;
+    left: -80px;
+    top: 30%;
+    z-index: 1;
+    width: 64px;
+    height: 64px;
+    background: url("../assets/quinta_parte/img/bat.png") 0 0 / 800% 100% no-repeat;
+    image-rendering: pixelated;
+    pointer-events: none;
+    animation:
+        bat-aletear 0.6s steps(8) infinite,
+        bat-volar 8s linear infinite;
+}
+
+@keyframes bat-aletear {
+    from { background-position: 0 0; }
+    to   { background-position: 114.2857% 0; }
+}
+
+@keyframes bat-volar {
+    0%   { left: -80px; top: 30%; }
+    25%  { top: 22%; }
+    50%  { top: 34%; }
+    75%  { top: 24%; }
+    100% { left: 100%;  top: 30%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .game-stage .bat-css { animation: none; }
+}
+
+/* ----- SELECTOR DE PERSONAJE ----- */
+.char-picker {
+    position: absolute;
+    left: 50%;
+    bottom: 76px;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    gap: 12px;
+    padding: 8px 14px 10px;
+    border: 2px solid var(--secondary-light);
+    border-radius: var(--surface-radius);
+    background-color: rgba(12, 68, 124, 0.85);
+    color: var(--neutral-white);
+}
+
+.char-picker legend {
+    padding: 0 6px;
+    color: var(--secondary-light);
+}
+
+.char-option {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.char-option input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.char-thumb {
+    width: 64px;
+    height: 64px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.35);
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    image-rendering: pixelated;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    animation: char-aletear 0.6s steps(8) infinite paused;
+}
+
+.char-option:hover .char-thumb,
+.char-option input:checked + .char-thumb {
+    animation-play-state: running;
+}
+
+.char-option:hover .char-thumb { transform: scale(1.08); }
+
+.char-option input:checked + .char-thumb { border-color: var(--secondary-light); }
+
+.char-option input:focus-visible + .char-thumb {
+    outline: 3px solid var(--interaction-focus);
+    outline-offset: 2px;
+}
+
+@keyframes char-aletear {
+    from { background-position: 0 0; }
+    to   { background-position: calc(100% * var(--n) / (var(--n) - 1)) 0; }
+}
+
+/* ----- KEYFRAMES CSS DEL JUEGO ----- */
+.game-stage canvas.fx-hit   { animation: stage-hit 0.4s ease; }
+.game-stage canvas.fx-crash { animation: stage-crash 0.6s ease forwards; }
+
+@keyframes stage-hit {
+    0%, 100% { transform: translate(0, 0); filter: none; }
+    20% { transform: translate(-6px, 3px); filter: drop-shadow(0 0 12px var(--error-default)); }
+    40% { transform: translate(6px, -3px); }
+    60% { transform: translate(-4px, 2px); }
+    80% { transform: translate(4px, -2px); }
+}
+
+@keyframes stage-crash {
+    0%   { filter: brightness(1); transform: scale(1); }
+    30%  { filter: brightness(2.5) saturate(0); transform: scale(1.03); }
+    100% { filter: brightness(0.6); transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .game-stage canvas.fx-hit,
+    .game-stage canvas.fx-crash { animation: none; }
 }
 
 .is-hidden {

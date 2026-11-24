@@ -2,7 +2,6 @@
 
 const BASE_IMG = 'assets/quinta_parte/img/';
 const ASSETS = {
-    murcielago: BASE_IMG + 'bat.png',
     moneda:     BASE_IMG + 'coin.png',
     enemigo:    BASE_IMG + 'enemy.png',
     torre:      BASE_IMG + 'tower.png',
@@ -18,7 +17,17 @@ const ASSETS = {
 const SPRITES = {
     murcielago: { frames: 8, dibujoAncho: 64, dibujoAlto: 64 },
     moneda:     { frames: 8, fps: 12, espejo: false },
-    enemigo:    { frames: 8, fps: 12, espejo: false }   
+    enemigo:    { frames: 8, fps: 12, espejo: false }
+};
+
+// Personajes elegibles en el menú. Cada uno es un spritesheet de una fila.
+// "filtro" es un filter de CSS (hue-rotate, grayscale...) que recolorea el sprite:
+// así hay variantes sin dibujar un spritesheet nuevo. Si tenés sprites propios,
+// poné otro "img" (y sus "frames") y dejá filtro: 'none'.
+const PERSONAJES = {
+    murcielago: { nombre: 'Murciélago', img: BASE_IMG + 'bat.png',       frames: 8, filtro: 'none' },
+    robin:      { nombre: 'Robin',      img: BASE_IMG + 'robin.png',     frames: 8, filtro: 'none' },
+    nightwing:  { nombre: 'Nightwing',  img: BASE_IMG + 'nightwing.png', frames: 8, filtro: 'none' }
 };
 
 // Animaciones del murciélago (índices de frame dentro de la fila)
@@ -33,6 +42,16 @@ const KEYFRAMES_EXPLOSION = [
     { t: 0,    escala: 1,   rot: 0,   alpha: 1, anillo: 0 },
     { t: 0.35, escala: 1.7, rot: 3.5, alpha: 1, anillo: 0.5 },
     { t: 1,    escala: 0.2, rot: 9,   alpha: 0, anillo: 1 }
+];
+
+// Animación por keyframes al ser golpeado por el enemigo: se agranda,
+// se sacude y se ilumina en rojo, y vuelve a la normalidad.
+const KEYFRAMES_GOLPE = [
+    { t: 0,    escala: 1,    rot: 0,    halo: 0 },
+    { t: 0.2,  escala: 1.4,  rot: -0.5, halo: 1 },
+    { t: 0.45, escala: 0.85, rot: 0.4,  halo: 0.7 },
+    { t: 0.7,  escala: 1.15, rot: -0.2, halo: 0.4 },
+    { t: 1,    escala: 1,    rot: 0,    halo: 0 }
 ];
 
 // Spritesheet de torres: 6 variantes en fila. Fracciones del frame:
@@ -85,7 +104,7 @@ class CapaParallax {
     render(ctx, mundoX, ancho, alto) {
         if (!listo(this.img)) return;
 
-        const w = ancho;                     
+        const w = ancho;
         const pos = mundoX * this.factor;
         const base = Math.floor(pos / w);
         const x0 = -Math.floor(pos - base * w);
@@ -116,7 +135,7 @@ class RunnerView {
         contenedor.appendChild(this.canvas);
 
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.imageSmoothingEnabled = false;   
+        this.ctx.imageSmoothingEnabled = false;
 
         // El murciélago se dibuja siempre en la misma X de pantalla;
         this.pantallaX = 150;
@@ -125,6 +144,10 @@ class RunnerView {
         for (const nombre in ASSETS) {
             this.img[nombre] = cargarImagen(ASSETS[nombre]);
         }
+
+        // Sprite del personaje elegido en el menú (si el id no existe, el murciélago)
+        this.personaje = PERSONAJES[model.personaje] || PERSONAJES.murcielago;
+        this.img.murcielago = cargarImagen(this.personaje.img);
 
         this.capas = CAPAS.map(c => new CapaParallax(this.img[c.img], c.factor, c.espejo));
     }
@@ -149,7 +172,7 @@ class RunnerView {
         this.dibujarMurcielago(model);
         this.dibujarHud(model);
 
-        
+
         if (model.estado === 'esperando') {
             const objetivo = model.modo === 'infinito'
                 ? 'Conseguí tantos puntos como puedas.'
@@ -157,19 +180,18 @@ class RunnerView {
 
             this.mensaje(
                 '¡Listo para volar!',
-                objetivo + ' Espacio o click para comenzar'
+                objetivo + ' Espacio o click para comenzar · M: menú'
             );
 
         } else if (model.estado === 'terminado') {
-            this.mensaje(
-                'Game Over - Puntaje: ' + model.puntaje,
-                'Espacio o click para reiniciar'
-            );
-
+            const titulo = model.nuevoRecord
+                ? '¡Nuevo récord! - ' + model.puntaje
+                : 'Game Over - Puntaje: ' + model.puntaje;
+            this.mensaje(titulo, 'Espacio o click: reiniciar · M: menú');
         } else if (model.estado === 'victoria') {
             this.mensaje(
                 '¡Ganaste! - Puntaje: ' + model.puntaje,
-                'Espacio o click para reiniciar'
+                'Espacio o click: reiniciar · M: menú'
             );
         }
     }
@@ -289,6 +311,7 @@ class RunnerView {
         let rot = 0;
         let alpha = 1;
         let frame = 0;
+        let halo = 0;
 
         if (p.animacion === 'explosion') {
             // animación por keyframes: giro, crecimiento, fundido y anillo de impacto
@@ -296,7 +319,7 @@ class RunnerView {
             escala = k.escala;
             rot = k.rot;
             alpha = k.alpha;
-            frame = 3;
+            frame = 3 % this.personaje.frames; 
 
             ctx.save();
             ctx.globalAlpha = Math.max(0, 1 - k.anillo);
@@ -310,9 +333,17 @@ class RunnerView {
             const anim = ANIMACIONES_MURCIELAGO[p.animacion];
             let i = Math.floor(p.tAnim * anim.fps);
             i = anim.loop ? i % anim.frames.length : Math.min(i, anim.frames.length - 1);
-            frame = anim.frames[i];
+            frame = anim.frames[i] % this.personaje.frames;  
             // se inclina según la velocidad vertical
             rot = Math.max(-0.4, Math.min(0.7, p.vy / 1000));
+
+            // animación por keyframes al ser golpeado por el enemigo
+            if (model.tGolpe < model.duracionGolpe) {
+                const g = interpolar(KEYFRAMES_GOLPE, model.tGolpe / model.duracionGolpe);
+                escala *= g.escala;
+                rot += g.rot;
+                halo = g.halo;
+            }
         }
 
         // parpadeo mientras está frenado por un enemigo
@@ -328,9 +359,21 @@ class RunnerView {
         ctx.scale(escala, escala);
         ctx.globalAlpha = alpha;
 
+        // halo rojo detrás del sprite durante el golpe
+        if (halo > 0) {
+            ctx.fillStyle = 'rgba(255, 60, 60, ' + (0.45 * halo) + ')';
+            ctx.beginPath();
+            ctx.arc(0, 0, 34, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
         if (listo(img)) {
-            const fw = img.naturalWidth / cfg.frames;
+            const fw = img.naturalWidth / this.personaje.frames;
             const fh = img.naturalHeight;
+            // variante de color del personaje (si el navegador soporta ctx.filter)
+            if (this.personaje.filtro !== 'none' && 'filter' in ctx) {
+                ctx.filter = this.personaje.filtro;
+            }
             ctx.drawImage(img, frame * fw, 0, fw, fh,
                 -cfg.dibujoAncho / 2, -cfg.dibujoAlto / 2, cfg.dibujoAncho, cfg.dibujoAlto);
         } else {
@@ -344,7 +387,7 @@ class RunnerView {
 
     // ---------- HUD y mensajes ----------
 
-    
+
     dibujarHud(model) {
         const ctx = this.ctx;
 
@@ -368,12 +411,20 @@ class RunnerView {
 
             ctx.fillStyle = '#67E8F9';
             ctx.fillRect(24, 48, 206 * progreso, 10);
+        } else{
+            ctx.fillText('Récord: ' + model.record, 24, 58);
         }
 
         if (model.tFreno > 0) {
             ctx.fillStyle = '#FF8080';
             ctx.font = '700 16px Nunito, sans-serif';
             ctx.fillText('¡Frenado!', 256, 36);
+
+            // en modo difícil el enemigo además resta puntos
+            if (model.ultimaPenalizacion > 0) {
+                ctx.font = '700 22px Nunito, sans-serif';
+                ctx.fillText('-' + model.ultimaPenalizacion + ' puntos', 256, 62);
+            }
         }
     }
 

@@ -73,7 +73,7 @@
             <div class="sidebar-group">
                 <h3 class="sidebar-title card-text">SEGUÍ JUGANDO</h3>
                 <a href="juego.html" class="sidebar-continue">
-                    <img src="quinta_parte/assets/quinta_parte/img/background.jpg" alt="" class="sidebar-continue-img">
+                    <img src="assets/quinta_parte/img/background.png" alt="" class="sidebar-continue-img">
                     <div class="sidebar-continue-info">
                         <span class="card-title">Bat Runner</span>
                         <span class="card-text">Jugado hace 2 horas</span>
@@ -197,6 +197,7 @@
             <div class="game-stage" id="gameStage">
 
                 <img src="assets/quinta_parte/img/background.png" alt="Portada de Bat Runner" class="game-stage-image">
+                <div class="bat-css" aria-hidden="true"></div>
 
                 <div class="game-menu">
                     <select id="gameMode" class="game-mode">
@@ -242,19 +243,22 @@
 
             <article class="info-card">
                 <h2>Cómo Jugar.</h2>
-                <p class="card-text"><strong>Controles:</strong> presioná Jugar y usá la barra espaciadora, la flecha arriba o el click del mouse para aletear. Si no hacés nada, el murciélago cae.</p>
-                <p class="card-text"><strong>Objetivo:</strong> el murciélago avanza solo por la ciudad. Pasá por el hueco entre las torres y llegá a 40 puntos para ganar.</p>
-                <p class="card-text"><strong>Puntos:</strong> cada torre superada suma 1 punto y cada gema roja que recojas suma 5.</p>
-                <p class="card-text"><strong>Enemigos:</strong> el murciélago verde no termina la partida, pero te frena y te hace parpadear unos segundos. Esquivalo para no perder ritmo.</p>
-                <p class="card-text"><strong>Cuidado:</strong> chocar con una torre o tocar el suelo termina la partida. Los huecos se achican a medida que avanzás y no están siempre a la misma altura ni distancia.</p>
+                <p class="card-text"><strong>Controles:</strong> elegí tu personaje, presioná Jugar y usá la barra espaciadora, la flecha arriba o el click del mouse para aletear. Si no hacés nada, el personaje cae. Presiona la tecla M para volver al menu.</p>
+                <p class="card-text"><strong>Objetivo:</strong> avanzás solo por la ciudad. Pasá por el hueco entre los pilares y llegá a la meta de puntos para ganar.</p>
+                <p class="card-text"><strong>Puntos:</strong> cada pilar superado suma 1 punto y cada moneda que recojas suma 5.</p>
+                <p class="card-text"><strong>Modos:</strong> en el <em>normal</em> la meta es de 40 puntos; en el <em>difícil</em>, de 60 puntos, con huecos más chicos desde el inicio, más enemigos y cada enemigo que toques te resta 5 puntos; en el <em>infinito</em> no hay meta: jugás hasta chocar y tratás de superar tu puntaje.</p>
+                <p class="card-text"><strong>Enemigos:</strong> el enemigo termina la partida, pero al tocarlo te frena, te sacude y te hace parpadear unos segundos. En el modo difícil, además, te quita 5 puntos.</p>
+                <p class="card-text"><strong>Cuidado:</strong> chocar con un pilar o tocar el suelo termina la partida. Los huecos se achican a medida que avanzás y no están siempre a la misma altura ni distancia.</p>
                 <p class="card-text">Tip: usá Pantalla Completa para tener más espacio de juego.</p>
             </article>
 
             <article class="info-card">
                 <h2>Acerca del juego.</h2>
-                <p class="card-text">Bat Runner es un juego de scroll horizontal inspirado en Flappy Bird. Controlás a un murciélago que vuela de noche entre las torres góticas de una ciudad iluminada por la luna.</p>
+                <p class="card-text">Bat Runner es un juego de scroll horizontal inspirado en Flappy Bird. Elegís a tu héroe (Murciélago, Golondrina o Cuervo) y volás de noche entre las torres de una ciudad iluminada por la luna.</p>
                 <p class="card-text">El escenario usa parallax de 4 capas (cielo, ciudad lejana, edificios y suelo) que se mueven a distinta velocidad para dar sensación de profundidad.</p>
-                <p class="card-text">El murciélago reacciona a cada situación con animaciones propias: aleteo al dar impulso, planeo, caída y una explosión al chocar. Además, en la escena aparecen gemas animadas que suman puntos y un enemigo volador que te frena.</p>
+                <p class="card-text">Tu personaje reacciona a cada situación con animaciones: aleteo al dar impulso, planeo y caída, una sacudida con halo rojo al ser golpeado por el enemigo y una explosión al chocar. Además, la pantalla reacciona con animaciones CSS3 (@keyframes): se sacude al recibir un golpe y destella al chocar con una torre o el suelo.</p>
+                <p class="card-text">En la escena aparecen dos elementos animados con spritesheet: monedas que suman 5 puntos y un enemigo volador que te frena (y en modo difícil, además, te resta 5 puntos).</p>
+                <p class="card-text">Los pilares se separan a distancias distintas, el hueco entre ellos se achica a medida que avanzás y cambia de altura en cada par.</p>
                 <p class="card-text">Hecho con HTML, CSS y JavaScript, con una arquitectura Modelo-Vista-Controlador.</p>
             </article>
 
@@ -266,10 +270,10 @@
             <h2>Galería</h2>
 
             <div class="gallery-grid">
-                <figure class="gallery-item"><img src="assets/img/galeria-1.jpg" alt="Captura 1 de Bat Runner: murciélago volando entre las torres"></figure>
-                <figure class="gallery-item"><img src="assets/img/galeria-2.jpg" alt="Captura 2 de Bat Runner: recolectando una gema"></figure>
-                <figure class="gallery-item"><img src="assets/img/galeria-3.jpg" alt="Captura 3 de Bat Runner: esquivando al enemigo verde"></figure>
-                <figure class="gallery-item"><img src="assets/img/galeria-4.jpg" alt="Captura 4 de Bat Runner: explosión al chocar con una torre"></figure>
+                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-1.png" alt="Captura 1 de Bat Runner: murciélago volando entre las torres"></figure>
+                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-2.png" alt="Captura 2 de Bat Runner: recolectando una gema"></figure>
+                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-3.png" alt="Captura 3 de Bat Runner: esquivando al enemigo verde"></figure>
+                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-4.png" alt="Captura 4 de Bat Runner: explosión al chocar con una torre"></figure>
             </div>
 
         </section>

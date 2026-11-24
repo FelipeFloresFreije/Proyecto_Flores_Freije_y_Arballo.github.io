@@ -47,14 +47,15 @@ class Elemento {
         this.golpeado = false;
     }
 }
-    
+
 class RunnerModel {
-    constructor(modo = 'normal') {
+    constructor(modo = 'normal', personaje = 'murcielago') {
         this.ancho = 960;
         this.alto = 540;
         this.altoSuelo = 50;
 
         this.modo = modo;
+        this.personaje = personaje;   // solo un id: la view sabe cómo dibujarlo
 
         // Parámetros de movimiento
         this.velocidadX = 200;
@@ -77,6 +78,7 @@ class RunnerModel {
         // Animaciones
         this.duracionAleteo = 0.35;
         this.duracionExplosion = 0.8;
+        this.duracionGolpe = 0.6;      // animación al ser golpeado por el enemigo
         this.tExplosion = 0;
 
         // Elementos
@@ -86,9 +88,21 @@ class RunnerModel {
         this.factorFreno = 0.5;
         this.duracionFreno = 1.5;
 
+        this.claveRecord = 'runner_record_' + this.modo;
+        this.record = this.leerRecord();    
+
         // Configuración de modos
         this.puntajeMeta = this.modo === 'normal' ? 40 :
                            this.modo === 'dificil' ? 60 : Infinity;
+
+        // El enemigo NUNCA termina la partida
+        // En modo difícil, además, resta puntos (la moneda suma, el enemigo resta).
+        this.puntosEnemigo = 0;
+        if (this.modo === 'dificil') {
+            this.puntosEnemigo = 5;
+            this.probEnemigo = 0.4;
+            this.huecoInicial = 200;
+        }
 
         this.pajaro = new Pajaro();
         this.reiniciar();
@@ -109,6 +123,11 @@ class RunnerModel {
 
         this.tExplosion = 0;
         this.tFreno = 0;
+        this.tGolpe = this.duracionGolpe;   // animación de golpe ya terminada
+        this.ultimaPenalizacion = 0;
+
+        this.recordPrevio = this.record;   // el récord con el que arranca esta partida
+        this.nuevoRecord = false;
 
         this.pajaro.setAnimacion('planeo', true);
 
@@ -243,6 +262,9 @@ class RunnerModel {
         if (this.tFreno > 0) {
             this.tFreno -= dt;
         }
+        if (this.tGolpe < this.duracionGolpe) {
+            this.tGolpe += dt;
+        }
         const velocidad = this.tFreno > 0 ? this.velocidadX * this.factorFreno : this.velocidadX;
         p.mundoX += velocidad * dt;
         p.vy += this.gravedad * dt;
@@ -272,7 +294,7 @@ class RunnerModel {
         this.generarTuberias();
         this.tuberias = this.tuberias.filter(t => t.mundoX + t.ancho > p.mundoX - 200);
         this.elementos = this.elementos.filter(e => e.mundoX + e.ancho > p.mundoX - 200);
-        
+
         // Monedas y enemigos
         for (const e of this.elementos) {
             if (!e.activo || e.golpeado || !this.tocaElemento(e)) {
@@ -284,14 +306,11 @@ class RunnerModel {
                 this.sumarPuntos(this.puntosMoneda);
 
             } else {
+                // El enemigo frena al murciélago en TODOS los modos, nunca termina la partida.
                 e.golpeado = true;
-
-                if (this.modo === 'dificil') {
-                    this.chocar();
-                    return;
-                }
-
                 this.tFreno = this.duracionFreno;
+                this.tGolpe = 0;
+                if (this.puntosEnemigo > 0) this.restarPuntos(this.puntosEnemigo);
             }
         }
 
@@ -308,9 +327,23 @@ class RunnerModel {
         }
     }
 
-    
+
+    // El puntaje nunca baja de 0 y restar puntos jamás termina la partida.
+    restarPuntos(n) {
+        this.puntaje = Math.max(0, this.puntaje - n);
+        this.ultimaPenalizacion = n;
+    }
+
     sumarPuntos(n) {
         this.puntaje += n;
+
+        if (this.modo === 'infinito' && this.puntaje > this.record) {
+            this.record = this.puntaje;
+            this.guardarRecord();                       // se guarda mientras juega
+            if (this.recordPrevio > 0){ 
+                this.nuevoRecord = true;
+            }
+        }
 
         // El modo infinito nunca alcanza una condición de victoria.
         if (
@@ -320,5 +353,15 @@ class RunnerModel {
         ) {
             this.estado = 'victoria';
         }
+    }
+
+    leerRecord() {
+        try { return parseInt(localStorage.getItem(this.claveRecord), 10) || 0; }
+        catch (e) { return 0; }
+    }
+
+    guardarRecord() {
+        try { localStorage.setItem(this.claveRecord, this.record); }
+        catch (e) { /* storage bloqueado: el juego sigue igual */ }
     }
 }
