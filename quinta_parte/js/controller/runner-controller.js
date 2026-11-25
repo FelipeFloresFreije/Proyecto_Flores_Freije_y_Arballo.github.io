@@ -69,7 +69,6 @@ class GameAudio {
 
 
 class RunnerController {
-    // alSalir: función opcional que se llama al apretar M o Esc (volver al menú).
     constructor(contenedor, modo = 'normal', personaje = 'murcielago', alSalir = null) {
         this.model = new RunnerModel(modo, personaje);
         this.view = new RunnerView(contenedor, this.model);
@@ -199,8 +198,7 @@ class RunnerController {
 }
 
 
-// Selector de personaje: se arma a partir de PERSONAJES (runner-view.js),
-// así que para agregar un personaje alcanza con sumarlo ahí.
+// Selector de personaje: se arma a partir de PERSONAJES
 function crearSelectorPersonaje(elegido) {
     const grupo = document.createElement('fieldset');
     grupo.className = 'char-picker';
@@ -216,6 +214,7 @@ function crearSelectorPersonaje(elegido) {
             '--n:' + p.frames + ';' +
             (p.frames > 1 ? 'animation-timing-function:steps(' + p.frames + ')' : 'animation:none') +
             '"></span>' +
+            '<span class="card-text char-name">' + p.nombre + '</span>' +
             '</label>';
     });
 
@@ -225,13 +224,12 @@ function crearSelectorPersonaje(elegido) {
 
 
 // Arranque: el botón "Jugar" de la portada reemplaza la imagen por el juego.
-// M o Esc durante la partida vuelven a la portada para cambiar modo o personaje.
 document.addEventListener('DOMContentLoaded', function () {
     const stage = document.getElementById('gameStage');
     if (!stage || !stage.querySelector('.game-play')) return;
 
     let runner = null;
-    let ultimoModo = 'normal';
+    let ultimoModo = null;
     let ultimoPersonaje = 'murcielago';
 
     function montarPortada() {
@@ -241,13 +239,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const boton = stage.querySelector('.game-play');
-        const selector = stage.querySelector('#gameMode');
-        if (selector) selector.value = ultimoModo;
+        const radios = stage.querySelectorAll('input[name="modo"]');
+
+        function modoElegido() {
+            const r = stage.querySelector('input[name="modo"]:checked');
+            return r ? r.value : null;
+        }
+
+        function actualizarBoton() {
+            const elegido = modoElegido();
+            boton.disabled = !elegido;
+            boton.textContent = elegido ? 'Jugar' : 'Elegí una dificultad';
+        }
+
+        // al volver con M se recuerda la última dificultad
+        if (ultimoModo) {
+            const previo = stage.querySelector('input[name="modo"][value="' + ultimoModo + '"]');
+            if (previo) previo.checked = true;
+        }
+        actualizarBoton();
+
+        radios.forEach(function (r) {
+            r.addEventListener('change', actualizarBoton);
+        });
 
         boton.addEventListener('click', function () {
+            const modo = modoElegido();
+            if (!modo) return;   // sin dificultad elegida no arranca
+
             const elegido = stage.querySelector('input[name="personaje"]:checked');
 
-            ultimoModo = selector ? selector.value : 'normal';
+            ultimoModo = modo;
             ultimoPersonaje = elegido ? elegido.value : 'murcielago';
 
             runner = new RunnerController(stage, ultimoModo, ultimoPersonaje, volverAlMenu);

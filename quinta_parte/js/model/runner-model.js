@@ -2,7 +2,7 @@
 
 class Pajaro {
     constructor() {
-        // Hitbox (el sprite se dibuja más grande que esto, ver la view)
+        // Hitbox
         this.ancho = 36;
         this.alto = 28;
         this.mundoX = 0;
@@ -55,7 +55,7 @@ class RunnerModel {
         this.altoSuelo = 50;
 
         this.modo = modo;
-        this.personaje = personaje;   // solo un id: la view sabe cómo dibujarlo
+        this.personaje = personaje;  
 
         // Parámetros de movimiento
         this.velocidadX = 200;
@@ -123,7 +123,7 @@ class RunnerModel {
 
         this.tExplosion = 0;
         this.tFreno = 0;
-        this.tGolpe = this.duracionGolpe;   // animación de golpe ya terminada
+        this.tGolpe = this.duracionGolpe;   
         this.ultimaPenalizacion = 0;
 
         this.recordPrevio = this.record;   // el récord con el que arranca esta partida
@@ -211,7 +211,6 @@ class RunnerModel {
         this.pajaro.setAnimacion('explosion', true);
     }
 
-    // ¿El pájaro choca con esta torre? (rectángulos en coordenadas del mundo)
     chocaCon(t) {
         const p = this.pajaro;
         const m = this.margenColision;

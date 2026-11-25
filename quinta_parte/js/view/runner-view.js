@@ -21,13 +21,10 @@ const SPRITES = {
 };
 
 // Personajes elegibles en el menú. Cada uno es un spritesheet de una fila.
-// "filtro" es un filter de CSS (hue-rotate, grayscale...) que recolorea el sprite:
-// así hay variantes sin dibujar un spritesheet nuevo. Si tenés sprites propios,
-// poné otro "img" (y sus "frames") y dejá filtro: 'none'.
 const PERSONAJES = {
     murcielago: { nombre: 'Murciélago', img: BASE_IMG + 'bat.png',       frames: 8, filtro: 'none' },
-    robin:      { nombre: 'Robin',      img: BASE_IMG + 'robin.png',     frames: 8, filtro: 'none' },
-    nightwing:  { nombre: 'Nightwing',  img: BASE_IMG + 'nightwing.png', frames: 8, filtro: 'none' }
+    robin:      { nombre: 'Golondrina',      img: BASE_IMG + 'robin.png',     frames: 8, filtro: 'none' },
+    nightwing:  { nombre: 'Cuervo',  img: BASE_IMG + 'nightwing.png', frames: 8, filtro: 'none' }
 };
 
 // Animaciones del murciélago (índices de frame dentro de la fila)
@@ -391,8 +388,11 @@ class RunnerView {
     dibujarHud(model) {
         const ctx = this.ctx;
 
-        ctx.fillStyle = 'rgba(12, 68, 124, 0.8)';
-        ctx.fillRect(12, 12, 230, 60);
+        // Panel redondeado
+        ctx.fillStyle = 'rgba(12, 68, 124, 0.85)';
+        ctx.beginPath();
+        ctx.roundRect(12, 12, 230, 60, 12);
+        ctx.fill();
 
         ctx.fillStyle = '#fff';
         ctx.font = '700 16px Nunito, sans-serif';
@@ -406,43 +406,77 @@ class RunnerView {
         if (model.modo !== 'infinito') {
             const progreso = Math.min(model.puntaje / model.puntajeMeta, 1);
 
+            // fondo de la barra
             ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-            ctx.fillRect(24, 48, 206, 10);
+            ctx.beginPath();
+            ctx.roundRect(24, 48, 206, 10, 5);
+            ctx.fill();
 
-            ctx.fillStyle = '#67E8F9';
-            ctx.fillRect(24, 48, 206 * progreso, 10);
-        } else{
+            // relleno (solo si hay progreso, con un mínimo para que se vea redondeado)
+            if (progreso > 0) {
+                ctx.fillStyle = '#67E8F9';
+                ctx.beginPath();
+                ctx.roundRect(24, 48, Math.max(10, 206 * progreso), 10, 5);
+                ctx.fill();
+            }
+        } else {
             ctx.fillText('Récord: ' + model.record, 24, 58);
         }
 
         if (model.tFreno > 0) {
+            // Cartel de frenado con fondo propio, para que se lea sobre cualquier escenario
+            const hayPenalizacion = model.ultimaPenalizacion > 0;
+            const alto = hayPenalizacion ? 60 : 36;
+
+            ctx.fillStyle = 'rgba(139, 0, 0, 0.75)';
+            ctx.beginPath();
+            ctx.roundRect(254, 12, 150, alto, 12);
+            ctx.fill();
+
             ctx.fillStyle = '#FF8080';
             ctx.font = '700 16px Nunito, sans-serif';
-            ctx.fillText('¡Frenado!', 256, 36);
+            ctx.fillText('¡Frenado!', 268, 36);
 
             // en modo difícil el enemigo además resta puntos
-            if (model.ultimaPenalizacion > 0) {
-                ctx.font = '700 22px Nunito, sans-serif';
-                ctx.fillText('-' + model.ultimaPenalizacion + ' puntos', 256, 62);
+            if (hayPenalizacion) {
+                ctx.fillStyle = '#fff';
+                ctx.font = '700 20px Nunito, sans-serif';
+                ctx.fillText('-' + model.ultimaPenalizacion + ' puntos', 268, 62);
             }
         }
     }
 
-
     mensaje(titulo, subtitulo) {
         const ctx = this.ctx;
-        const cx = this.canvas.width / 2;
-        const cy = this.canvas.height / 2;
+        const W = this.canvas.width;
+        const H = this.canvas.height;
+        const cx = W / 2;
+        const cy = H / 2;
+        const w = 640;
+        const h = 150;
 
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
-        ctx.fillRect(0, cy - 50, this.canvas.width, 100);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.fillRect(0, 0, W, H);
 
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = 'rgba(12, 68, 124, 0.92)';
+        ctx.strokeStyle = '#67E8F9';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(cx - w / 2, cy - h / 2, w, h, 16);
+        ctx.fill();
+        ctx.stroke();
+
         ctx.textAlign = 'center';
-        ctx.font = '700 30px Nunito, sans-serif';
-        ctx.fillText(titulo, cx, cy - 6);
-        ctx.font = '400 20px Nunito, sans-serif';
-        ctx.fillText(subtitulo, cx, cy + 28);
+        ctx.fillStyle = '#fff';
+        ctx.font = '700 34px Nunito, sans-serif';
+        ctx.fillText(titulo, cx, cy - 8);
+
+        // el subtítulo parpadea suave para invitar a jugar
+        ctx.globalAlpha = 0.65 + 0.35 * Math.sin(performance.now() / 300);
+        ctx.fillStyle = '#B5D4F4';
+        ctx.font = '400 18px Nunito, sans-serif';
+        ctx.fillText(subtitulo, cx, cy + 32);
+        ctx.globalAlpha = 1;
         ctx.textAlign = 'start';
     }
 }

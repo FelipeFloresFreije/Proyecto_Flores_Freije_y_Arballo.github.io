@@ -199,15 +199,39 @@
                 <img src="assets/quinta_parte/img/background.png" alt="Portada de Bat Runner" class="game-stage-image">
                 <div class="bat-css" aria-hidden="true"></div>
 
-                <div class="game-menu">
-                    <select id="gameMode" class="game-mode">
-                        <option value="normal">Modo normal</option>
-                        <option value="dificil">Modo difícil</option>
-                        <option value="infinito">Modo infinito</option>
-                    </select>
+                <div class="game-cover-shade" aria-hidden="true"></div>
+                    <h2 class="game-title">BAT RUNNER</h2>
+                <p class="game-subtitle">Volá entre las torres de la ciudad</p>
 
-                    <button type="button" class="btn btn-small btn-primary game-play">
-                        Jugar
+                <div class="game-menu">
+                    <div class="mode-picker" role="radiogroup" aria-label="Elegí la dificultad">
+                        <label class="mode-option">
+                            <input type="radio" name="modo" value="normal">
+                            <span class="mode-btn mode-normal">
+                                <strong>Normal</strong>
+                                <small>Meta: 40 puntos</small>
+                            </span>
+                        </label>
+
+                        <label class="mode-option">
+                            <input type="radio" name="modo" value="dificil">
+                            <span class="mode-btn mode-dificil">
+                                <strong>Difícil</strong>
+                                <small>Meta: 60 · enemigos restan</small>
+                            </span>
+                        </label>
+
+                        <label class="mode-option">
+                            <input type="radio" name="modo" value="infinito">
+                            <span class="mode-btn mode-infinito">
+                                <strong>Infinito</strong>
+                                <small>Sin meta · récord</small>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="button" class="btn btn-medium btn-primary game-play" disabled>
+                        Elegí una dificultad
                     </button>
                 </div>
 
@@ -243,12 +267,12 @@
 
             <article class="info-card">
                 <h2>Cómo Jugar.</h2>
-                <p class="card-text"><strong>Controles:</strong> elegí tu personaje, presioná Jugar y usá la barra espaciadora, la flecha arriba o el click del mouse para aletear. Si no hacés nada, el personaje cae. Presiona la tecla M para volver al menu.</p>
-                <p class="card-text"><strong>Objetivo:</strong> avanzás solo por la ciudad. Pasá por el hueco entre los pilares y llegá a la meta de puntos para ganar.</p>
-                <p class="card-text"><strong>Puntos:</strong> cada pilar superado suma 1 punto y cada moneda que recojas suma 5.</p>
+                <p class="card-text"><strong>Controles:</strong> elegí tu personaje y una dificultad, presioná Jugar y usá la barra espaciadora, la flecha arriba o el click del mouse para aletear. Si no hacés nada, el personaje cae. Con la tecla M volvés al menú.</p>
+                <p class="card-text"><strong>Objetivo:</strong> avanzás solo por la ciudad. Pasá por el hueco entre las torres y llegá a la meta de puntos para ganar.</p>
+                <p class="card-text"><strong>Puntos:</strong> cada torre superada suma 1 punto y cada moneda que recojas suma 5.</p>
                 <p class="card-text"><strong>Modos:</strong> en el <em>normal</em> la meta es de 40 puntos; en el <em>difícil</em>, de 60 puntos, con huecos más chicos desde el inicio, más enemigos y cada enemigo que toques te resta 5 puntos; en el <em>infinito</em> no hay meta: jugás hasta chocar y tratás de superar tu puntaje.</p>
-                <p class="card-text"><strong>Enemigos:</strong> el enemigo termina la partida, pero al tocarlo te frena, te sacude y te hace parpadear unos segundos. En el modo difícil, además, te quita 5 puntos.</p>
-                <p class="card-text"><strong>Cuidado:</strong> chocar con un pilar o tocar el suelo termina la partida. Los huecos se achican a medida que avanzás y no están siempre a la misma altura ni distancia.</p>
+                <p class="card-text"><strong>Enemigos:</strong> el enemigo volador nunca termina la partida: al tocarlo te frena, te sacude y te hace parpadear unos segundos. En el modo difícil, además, te quita 5 puntos.</p>
+                <p class="card-text"><strong>Cuidado:</strong> chocar con una torre o tocar el suelo termina la partida. Los huecos se achican a medida que avanzás y no están siempre a la misma altura ni distancia.</p>
                 <p class="card-text">Tip: usá Pantalla Completa para tener más espacio de juego.</p>
             </article>
 
@@ -258,7 +282,7 @@
                 <p class="card-text">El escenario usa parallax de 4 capas (cielo, ciudad lejana, edificios y suelo) que se mueven a distinta velocidad para dar sensación de profundidad.</p>
                 <p class="card-text">Tu personaje reacciona a cada situación con animaciones: aleteo al dar impulso, planeo y caída, una sacudida con halo rojo al ser golpeado por el enemigo y una explosión al chocar. Además, la pantalla reacciona con animaciones CSS3 (@keyframes): se sacude al recibir un golpe y destella al chocar con una torre o el suelo.</p>
                 <p class="card-text">En la escena aparecen dos elementos animados con spritesheet: monedas que suman 5 puntos y un enemigo volador que te frena (y en modo difícil, además, te resta 5 puntos).</p>
-                <p class="card-text">Los pilares se separan a distancias distintas, el hueco entre ellos se achica a medida que avanzás y cambia de altura en cada par.</p>
+                <p class="card-text">Las torres se separan a distancias distintas, el hueco entre ellas se achica a medida que avanzás y cambia de altura en cada par.</p>
                 <p class="card-text">Hecho con HTML, CSS y JavaScript, con una arquitectura Modelo-Vista-Controlador.</p>
             </article>
 
@@ -270,10 +294,10 @@
             <h2>Galería</h2>
 
             <div class="gallery-grid">
-                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-1.png" alt="Captura 1 de Bat Runner: murciélago volando entre las torres"></figure>
-                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-2.png" alt="Captura 2 de Bat Runner: recolectando una gema"></figure>
-                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-3.png" alt="Captura 3 de Bat Runner: esquivando al enemigo verde"></figure>
-                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-4.png" alt="Captura 4 de Bat Runner: explosión al chocar con una torre"></figure>
+                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-1.png" alt="Captura 1 de Bat Runner: menú del juego"></figure>
+                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-2.png" alt="Captura 2 de Bat Runner: el personaje Golondrina volando"></figure>
+                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-3.png" alt="Captura 3 de Bat Runner: el personaje Murciélago volando"></figure>
+                <figure class="gallery-item"><img src="assets/quinta_parte/img/galeria/galeria-4.png" alt="Captura 4 de Bat Runner: pantalla al conseguir un nuevo récord"></figure>
             </div>
 
         </section>
